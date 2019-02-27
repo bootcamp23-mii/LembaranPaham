@@ -5,94 +5,139 @@
  */
 package daos;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import models.Country;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 /**
  *
  * @author gerydanu
  */
 public class CountryDAO {
-    
-    private Connection connection;
-    
-    public CountryDAO(Connection connection) {
-        this.connection = connection;
+
+    private Session session;
+    private SessionFactory factory;
+    private Transaction transaction;
+
+    public CountryDAO() {
     }
-    
+
+    public CountryDAO(SessionFactory factory) {
+        this.factory = factory;
+    }
+
     /**
-     * 
+     *
      * @param keyword
      * @param isGetById
-     * @return 
+     * @return
      */
-    public List<Country> getData(Object keyword, boolean isGetById) {
-        List<Country> listCountry = new ArrayList<Country>();
-        String query = "";
-        if (isGetById) {
-            query = "SELECT * FROM COUNTRIES WHERE COUNTRY_ID = '" + keyword + "'";
-        } else {
-            query = "SELECT * FROM COUNTRIES WHERE COUNTRY_ID like '%" + keyword + "%' or COUNTRY_NAME like '%" + keyword + "%' or REGION_ID like '%" + keyword + "%'";
-        }
+    public List<Country> getAll() {
+        List<Country> country = new ArrayList<>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
 
         try {
-            PreparedStatement prepareStatment = connection.prepareStatement(query);
-            ResultSet resultSet = prepareStatment.executeQuery();
-            while (resultSet.next()) {
-                listCountry.add(new Country(resultSet.getString(1), resultSet.getString(2), resultSet.getInt(3)));
-            }
+            country = session.createQuery("FROM Country").list();
+            transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
         }
-        return listCountry;
+
+        return country;
     }
-    
-    /**
-     * 
-     * @param c
-     * @param isInsert
-     * @return 
-     */
-    public boolean save(Country c, boolean isInsert) {
+
+    public boolean saveOrUpdate(Country country) {
         boolean result = false;
-        String query = "";
-        if (isInsert) {
-            query = "INSERT INTO COUNTRIES (COUNTRY_ID,COUNTRY_NAME,REGION_ID) VALUES('" +c.getCountry_id()+ "','" + c.getCountry_name()+ "'," + c.getRegion_id() + ")";
-        } else {
-            query = "UPDATE COUNTRIES SET REGION_ID=" + c.getRegion_id() + ",COUNTRY_NAME='" + c.getCountry_name()+ "' WHERE COUNTRY_ID='" + c.getCountry_id() + "'";
-        }
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.executeQuery();
+            session.saveOrUpdate(country);
+            transaction.commit();
             result = true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
         }
         return result;
+
     }
-  
-    /**
-     * 
-     * @param country_id
-     * @return 
-     */
-    public boolean delete(String country_id){
+
+    public boolean saveOrDelete(Country country, boolean isSave) {
         boolean result = false;
-        String query = "DELETE FROM COUNTRIES WHERE COUNTRY_ID = ?";
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);            
-            preparedStatement.setString(1, country_id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            if (isSave) {
+                session.save(country);
+            } else {
+                session.delete(country);
+            }
+
+            transaction.commit();
             result = true;
         } catch (Exception e) {
-            e.getStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
         }
-        
         return result;
     }
-    
+
+    public Country getById(BigDecimal id) {
+
+        Country country = new Country();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            country = (Country) session.createQuery("FROM Country WHERE id = " + id + "order by 1").list().get(0);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return country;
+    }
+
+    public List<Country> searchBy(String key) {
+        List<Country> listcountry = new ArrayList<>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            listcountry = session.createQuery("FROM Country WHERE id like '%"
+                    + key + "%' or name like '%" + key + "%' or region like '%" + key + "%' order by 1").list();
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return listcountry;
+
+    }
+
 }
