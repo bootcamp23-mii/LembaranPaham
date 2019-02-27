@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author FES
+ * @author AdhityaWP
  */
 @Entity
 @Table(name = "LOCATIONS")
@@ -41,7 +41,7 @@ public class Location implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "LOCATION_ID")
-    private Short location;
+    private Short id;
     @Column(name = "STREET_ADDRESS")
     private String streetAddress;
     @Column(name = "POSTAL_CODE")
@@ -61,20 +61,25 @@ public class Location implements Serializable {
     }
 
     public Location(Short locationId) {
-        this.location = locationId;
+        this.id = locationId;
     }
 
-    public Location(Short locationId, String city) {
-        this.location = locationId;
+    public Location(Short locationId, String streetAddress, String postalCode, String city, String stateProvince, Country countryId) {
+        this.id = locationId;
+        this.streetAddress = streetAddress;
+        this.postalCode = postalCode;
         this.city = city;
+        this.stateProvince = stateProvince;
+        this.country = countryId;        
+    }
+    
+
+    public Short getId() {
+        return id;
     }
 
-    public Short getLocation() {
-        return location;
-    }
-
-    public void setLocation(Short location) {
-        this.location = location;
+    public void setId(Short id) {
+        this.id = id;
     }
 
     public String getStreetAddress() {
@@ -129,7 +134,7 @@ public class Location implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (location != null ? location.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -140,7 +145,7 @@ public class Location implements Serializable {
             return false;
         }
         Location other = (Location) object;
-        if ((this.location == null && other.location != null) || (this.location != null && !this.location.equals(other.location))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -148,7 +153,7 @@ public class Location implements Serializable {
 
     @Override
     public String toString() {
-        return "models.Location[ locationId=" + location + " ]";
+        return "models.Location[ locationId=" + id + " ]";
     }
     
 }

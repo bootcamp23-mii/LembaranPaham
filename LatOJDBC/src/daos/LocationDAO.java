@@ -5,109 +5,203 @@
  */
 package daos;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import models.Location;
+import models.Region;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 /**
  *
- * @author Pandu
+ * @author AdhityaWP
  */
 public class LocationDAO {
 
-    private Connection connection;
+    private SessionFactory factory;
+    private Session session;
+    private Transaction transaction;
 
-    public LocationDAO(Connection connection) {
-        this.connection = connection;
+    public LocationDAO(SessionFactory factory) {
+        this.factory = factory;
     }
 
-    /**
-     * This method use to delete some row from locations table
-     *
-     * @param id this id use to
-     * @return return value that given are statement true or false
-     */
-    public boolean delete(int id) {
-        boolean result = false;
-        String query = "DELETE FROM LOCATIONS WHERE LOCATION_ID=" + id;
+    public LocationDAO() {
+    }
+
+    public List<Location> getAll() {
+        List<Location> locations = new ArrayList<Location>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.executeQuery();
+            locations = session.createQuery("FROM Location").list();
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return locations;
+    }
+    
+    public Location getById(Object key) {
+        Location locations = new Location();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            locations = (Location) session.createQuery("FROM Location WHERE id = " +key).list().get(0);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return locations;
+    }
+
+    public List<Location> searchBy(String key) {
+        List<Location> locations = new ArrayList<Location>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            locations = session.createQuery("FROM Location WHERE id LIKE '%" + key 
+                    + "%' OR STREET_ADDRESS LIKE '%" + key + "%' OR POSTAL_CODE LIKE '%"+key+"%' OR CITY LIKE '%"+key
+                    + "%' OR STATE_PROVINCE LIKE '%" + key + "%' ORDER BY 1").list();
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return locations;
+    }
+    
+    public List<Location> getData(String key) {
+        List<Location> locations = new ArrayList<Location>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            locations = session.createQuery("FROM Location WHERE id LIKE '%" + key 
+                    + "%' OR STREET_ADDRESS LIKE '%" + key + "%' OR POSTAL_CODE LIKE '%"+key+"%' OR CITY LIKE '%"+key
+                    + "%' OR STATE_PROVINCE LIKE '%" + key + "%' ORDER BY 1").list();
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return locations;
+    }
+    
+    public boolean insert(Location location){
+        boolean result = false;
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            session.save(location);
+            transaction.commit();
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
+            if(transaction != null){
+                transaction.rollback();
+            }
+        }finally{
+            session.close();
         }
         return result;
     }
-
-    /**
-     * This method use to show some row from locations table
-     *
-     * @param keyword are the value of what you want to search
-     * @param isGetById are the value of boolean that to separate search or
-     * getByID
-     * @return return that given are the series of data that get from ID
-     */
-    public List<Location> getData(Object keyword, boolean isGetById) {
-        String query = "";
-        List<Location> listRegion = new ArrayList<Location>();
-        if (isGetById) {
-            query = "SELECT * FROM LOCATIONS WHERE LOCATION_ID =" + keyword;
-        } else {
-            query = "SELECT * FROM LOCATIONS WHERE LOCATION_ID LIKE '%" + keyword + "%' OR STREET_ADDRESS LIKE '%" + keyword + "%'";
-        }
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                listRegion.add(new Location(
-                        resultSet.getInt(1), resultSet.getString(2),
-                        resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getString(5), resultSet.getString(6)));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listRegion;
-    }
-
-    /**
-     * This method use to save or insert some row to locations table
-     *
-     * @param l are the value of what you want to input
-     * @param isInsert are the value of boolean that to separate insert and
-     * update
-     * @return
-     */
-    public boolean save(Location l, boolean isInsert) {
+    
+    public boolean update(Location location){
         boolean result = false;
-        String query = "";
-        if (isInsert) {
-
-            query = "INSERT INTO LOCATIONS(street_address, postal_code, city, state_province, country_id, location_id)"
-                    + "VALUES (?,?,?,?,?,?)";
-        } else {
-            query = "UPDATE LOCATIONS SET STREET_ADDRESS = ?, POSTAL_CODE = ?, CITY = ?, STATE_PROVINCE = ?, COUNTRY_ID =?, LOCATION_ID = ?  WHERE LOCATION_ID = ?";
-
-        }
-
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(2, l.getPostal());
-            preparedStatement.setString(3, l.getCity());
-            preparedStatement.setString(4, l.getProvince());
-            preparedStatement.setString(5, l.getCountry());
-            preparedStatement.setInt(6, l.getId());
-            preparedStatement.executeQuery();
+            session.saveOrUpdate(location);
+            transaction.commit();
             result = true;
-
-            System.out.println(query);
         } catch (Exception e) {
             e.printStackTrace();
+            if(transaction != null){
+                transaction.rollback();
+            }
+        }finally{
+            session.close();
+        }
+        return result;
+    }
+    
+    public boolean delete(Location location){
+        boolean result = false;
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            session.delete(location);
+            transaction.commit();
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if(transaction != null){
+                transaction.rollback();
+            }
+        }finally{
+            session.close();
+        }
+        return result;
+    }    
+    
+    public boolean save(Location location){
+        boolean result = false;
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            session.saveOrUpdate(location);
+            transaction.commit();
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if(transaction != null){
+                transaction.rollback();
+            }
+        }finally{
+            session.close();
+        }
+        return result;
+    }
+    
+    public boolean saveOrDelete(Location location, boolean params){
+        boolean result = false;
+        boolean isSave = params;
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            if(isSave==true){
+                session.saveOrUpdate(location);
+            }else{
+                session.delete(location);
+            }
+            transaction.commit();
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if(transaction != null){
+                transaction.rollback();
+            }
+        }finally{
+            session.close();
         }
         return result;
     }

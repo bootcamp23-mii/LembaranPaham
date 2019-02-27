@@ -16,17 +16,17 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jInternalFrame1" min="-2" max="-2" attributes="0"/>
+          <Component id="jfLocation" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jInternalFrame1" alignment="0" max="32767" attributes="0"/>
+          <Component id="jfLocation" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JInternalFrame" name="jInternalFrame1">
+    <Container class="javax.swing.JInternalFrame" name="jfLocation">
       <Properties>
         <Property name="closable" type="boolean" value="true"/>
         <Property name="visible" type="boolean" value="true"/>
@@ -37,28 +37,28 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jScrollPane1" alignment="1" min="-2" pref="529" max="-2" attributes="0"/>
+                      <Component id="spTabelLoc" alignment="1" min="-2" pref="529" max="-2" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <EmptySpace min="24" pref="24" max="-2" attributes="0"/>
-                                  <Component id="idLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblId" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="postalLabel" min="-2" max="-2" attributes="0"/>
-                                      <Component id="addressLabel" max="32767" attributes="0"/>
-                                      <Component id="saveButton" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lblPostal" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblStreet" max="32767" attributes="0"/>
+                                      <Component id="btSave" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="fieldPostal" min="-2" pref="130" max="-2" attributes="0"/>
-                              <Component id="fieldId" min="-2" pref="130" max="-2" attributes="0"/>
-                              <Component id="fieldAddress" min="-2" pref="130" max="-2" attributes="0"/>
+                              <Component id="tfPostal" min="-2" pref="130" max="-2" attributes="0"/>
+                              <Component id="tfId" min="-2" pref="130" max="-2" attributes="0"/>
+                              <Component id="tfStreet" min="-2" pref="130" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
@@ -66,33 +66,33 @@
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Group type="102" attributes="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="cityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="deleteButton" min="-2" max="-2" attributes="0"/>
+                                              <Component id="lblCity" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="lblCountry" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="btDelete" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="searchCombo" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="provinceLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="cbSearch" max="32767" attributes="0"/>
+                                              <Component id="lblState" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="fieldCity" alignment="0" pref="130" max="32767" attributes="0"/>
-                                      <Component id="fieldProvince" alignment="0" pref="130" max="32767" attributes="0"/>
-                                      <Component id="comboCountry" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="tfCity" alignment="0" pref="130" max="32767" attributes="0"/>
+                                      <Component id="TfState" alignment="0" pref="130" max="32767" attributes="0"/>
+                                      <Component id="cbCountry" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace min="-2" pref="218" max="-2" attributes="0"/>
-                                  <Component id="searchButton" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btSearch" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <Component id="resetButton" alignment="1" min="-2" pref="77" max="-2" attributes="0"/>
+                      <Component id="btReset" alignment="1" min="-2" pref="77" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="29" max="32767" attributes="0"/>
               </Group>
@@ -108,138 +108,138 @@
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="fieldId" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="idLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="tfId" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblId" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="fieldAddress" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="addressLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="tfStreet" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblStreet" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="100" pref="100" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="fieldPostal" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="postalLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="tfPostal" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblPostal" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                          <Component id="fieldCity" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cityLabel" min="-2" max="-2" attributes="0"/>
+                                          <Component id="tfCity" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblCity" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="fieldProvince" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="provinceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="TfState" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="lblState" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
                                   <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                                  <Component id="comboCountry" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbCountry" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="136" max="-2" attributes="0"/>
-                          <Component id="countryLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblCountry" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="resetButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="searchCombo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btReset" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="deleteButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="searchButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btSave" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btDelete" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" min="-2" pref="194" max="-2" attributes="0"/>
+                  <Component id="spTabelLoc" min="-2" pref="194" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="idLabel">
+        <Component class="javax.swing.JLabel" name="lblId">
           <Properties>
             <Property name="text" type="java.lang.String" value="Location ID"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="addressLabel">
+        <Component class="javax.swing.JLabel" name="lblStreet">
           <Properties>
             <Property name="text" type="java.lang.String" value="Street Address"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="postalLabel">
+        <Component class="javax.swing.JLabel" name="lblPostal">
           <Properties>
             <Property name="text" type="java.lang.String" value="Postal Code"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="cityLabel">
+        <Component class="javax.swing.JLabel" name="lblCity">
           <Properties>
             <Property name="text" type="java.lang.String" value="City"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="provinceLabel">
+        <Component class="javax.swing.JLabel" name="lblState">
           <Properties>
             <Property name="text" type="java.lang.String" value="State Province"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="countryLabel">
+        <Component class="javax.swing.JLabel" name="lblCountry">
           <Properties>
             <Property name="text" type="java.lang.String" value="Country"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="fieldId">
+        <Component class="javax.swing.JTextField" name="tfId">
         </Component>
-        <Component class="javax.swing.JTextField" name="fieldPostal">
+        <Component class="javax.swing.JTextField" name="tfPostal">
         </Component>
-        <Component class="javax.swing.JTextField" name="fieldAddress">
+        <Component class="javax.swing.JTextField" name="tfStreet">
         </Component>
-        <Component class="javax.swing.JTextField" name="fieldProvince">
+        <Component class="javax.swing.JTextField" name="TfState">
         </Component>
-        <Component class="javax.swing.JTextField" name="fieldCity">
+        <Component class="javax.swing.JTextField" name="tfCity">
         </Component>
-        <Component class="javax.swing.JButton" name="saveButton">
+        <Component class="javax.swing.JButton" name="btSave">
           <Properties>
             <Property name="text" type="java.lang.String" value="SAVE"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSaveActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="deleteButton">
+        <Component class="javax.swing.JButton" name="btDelete">
           <Properties>
             <Property name="text" type="java.lang.String" value="DELETE"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btDeleteActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="searchButton">
+        <Component class="javax.swing.JButton" name="btSearch">
           <Properties>
             <Property name="text" type="java.lang.String" value="SEARCH"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSearchActionPerformed"/>
           </Events>
         </Component>
-        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+        <Container class="javax.swing.JScrollPane" name="spTabelLoc">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="contentTable">
+            <Component class="javax.swing.JTable" name="tbLocation">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="7" rowCount="4">
@@ -296,20 +296,20 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="contentTableMouseClicked"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbLocationMouseClicked"/>
               </Events>
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="resetButton">
+        <Component class="javax.swing.JButton" name="btReset">
           <Properties>
             <Property name="text" type="java.lang.String" value="RESET"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btResetActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="comboCountry">
+        <Component class="javax.swing.JComboBox" name="cbCountry">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="25">
@@ -345,7 +345,7 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JComboBox" name="searchCombo">
+        <Component class="javax.swing.JComboBox" name="cbSearch">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">
@@ -355,6 +355,9 @@
               </StringArray>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbSearchActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>

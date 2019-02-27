@@ -6,62 +6,54 @@
 package controllers;
 
 import daos.LocationDAO;
-import java.sql.Connection;
 import java.util.List;
+import models.Country;
 import models.Location;
+import org.hibernate.SessionFactory;
 
 /**
  *
- * @author Pandu
+ * @author AdhityaWP
  */
 public class LocationController {
-
-    private Connection connection;
     private LocationDAO ldao;
 
-    public LocationController(Connection connection) {
-        ldao = new LocationDAO(connection);
+    public LocationController(SessionFactory sessionFactory) {
+        ldao = new LocationDAO(sessionFactory);
     }
-
-    public String insert(String id, String address, String postal, String city, String province, String country) {
-        String result = "";
-        if (ldao.save(new Location(Integer.parseInt(id), address, postal, city, province, country), true)) {
-
-            result = "YEAY, your new data inserted into table";
-        } else {
-            result = "OUCH";
-
-//        } else {
-//            result = "Ouch, Sorry you might miss something";
+    
+    public String insert(String locationId, String streetAddress, String postalCode, String city, String stateProvince, String countryId){
+        if(ldao.saveOrDelete(new Location(new Short(locationId),streetAddress,postalCode,city,stateProvince, new Country(countryId)), true)){
+            return "Selamat insert berhasil";
+        }else{
+            return "Maaf coba lagi";
         }
-        return result;
     }
-
-    public String update(String id, String address, String postal, String city, String province, String country) {
-        String result = "";
-        if (ldao.save(new Location(Integer.parseInt(id), address, postal, city, province, country), false)) {
-            result = "Data Changes Complete";
-        } else {
-            result = "Ouch, Sorry you might miss something";
+    
+    public String update(String locationId, String streetAddress, String postalCode, String city, String stateProvince, String countryId){
+        if(ldao.saveOrDelete(new Location(new Short(locationId),streetAddress,postalCode,city,stateProvince, new Country(countryId)), true)){
+            return "Selamat update berhasil";
+        }else{
+            return "Maaf coba lagi";
         }
-        return result;
     }
-
-    public List<Location> getAll(String keyword) {
-        return ldao.getData(keyword, false);
-    }
-
-    public List<Location> getById(String keyword) {
-        return ldao.getData(keyword, true);
-    }
-
-    public String delete(String id) {
-        String result = "";
-        if (ldao.delete(Integer.parseInt(id))) {
-            result = "Data have been deleted";
-        } else {
-            result = "Ouch, Something Missing";
+    
+   public String delete(String locationId){
+        if(ldao.saveOrDelete(new Location(new Short(locationId)),false)){
+            return "Terhapus";
+        }else{
+            return "Maaf coba lagi";
         }
-        return result;
+    }
+        
+    public List<Location> getAll(){   
+        return ldao.getData("");
+    }
+    
+    public List<Location> searchBy(String key){   
+        return ldao.getData(key);
+    }
+    public Location getById(String key){   
+        return ldao.getById(key);
     }
 }
