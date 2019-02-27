@@ -8,6 +8,7 @@ package views;
 import controllers.CountryController;
 import controllers.RegionController;
 import daos.RegionDAO;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -16,20 +17,21 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import models.Country;
 import models.Region;
-import tools.DBConnection;
+import org.hibernate.SessionFactory;
+
 
 /**
  *
  * @author gerydanu
  */
 public class CountryView extends javax.swing.JInternalFrame {
-
-    DBConnection connection = new DBConnection();
-    CountryController cc = new CountryController(connection.getConnection());
-    RegionController rc = new RegionController(connection.getConnection());
+    private SessionFactory sessionFactory;
+    CountryController cc = new CountryController(sessionFactory);
+    RegionController rc = new RegionController((Connection) sessionFactory);
     
     
     DefaultTableModel tableCountry;
+   
     /**
      * Creates new form Country
      */
@@ -298,21 +300,18 @@ public class CountryView extends javax.swing.JInternalFrame {
         return true;
     }
     
-    private boolean isEmpty() {
-        if (cc.searchData(tfCountryId.getText(),true).isEmpty()) {
-            return true;
-        }
-        return false;
+    private List<Country> isEmpty() {
+        return cc.searchBy(title);
     }
     
-    private void showAllCountryTable(List<Country> countries){
-        Object[] columnNames = {"No.", "Country ID", "Country Name", "Region ID"};
-        Object[][] data = new Object[countries.size()][columnNames.length];
+    private void showAllCountryTable(List<Country> country){
+        Object[] columnNames = {"No.", "Country", "Name", "Region"};
+        Object[][] data = new Object[country.size()][columnNames.length];
         for (int i = 0; i < data.length; i++) {
             data[i][0] = (i + 1);
-            data[i][1] = countries.get(i).getCountry_id();
-            data[i][2] = countries.get(i).getCountry_name();
-            data[i][3] = countries.get(i).getRegion_id();
+            data[i][1] = country.get(i).getId();
+            data[i][2] = country.get(i).getName();
+            data[i][3] = country.get(i).getRegion();
         }
         tableCountry = new DefaultTableModel(data, columnNames);
         tbCountries.setModel(tableCountry);
