@@ -25,6 +25,11 @@ public class EmployeeDAO {
         this.factory = factory;
     }
     
+    /**
+     * Fungsi untuk mencari data yang terdapat di tabel Employees. Data yang dicari dapat berupa ID, First_name, Last_name, Email, Phone_number, Hire_date, Job, Salary, Commision_pct, Manager, atau Department.
+     * @param keyword berupa angka atau huruf.
+     * @return Menampilkan data pada tabel sesuai keyword yang dicari.
+     */
     public List<Employee> Search(Object keyword){
         List<Employee> employees = new ArrayList<>();
         session = this.factory.openSession();
@@ -46,6 +51,11 @@ public class EmployeeDAO {
         return employees;
     }
     
+    /**
+     * Fungsi untuk mencari data pada tabel Employees berdasarkan ID Employee.
+     * @param word id Employee yang dicari, dapat berupa angka atau huruf.
+     * @return Menampilkan data pada tabel Employees sesuai ID yang dicari
+     */
     public Employee SearchById(Object word){
         Employee employee = new Employee();
         session = this.factory.openSession();
@@ -62,6 +72,12 @@ public class EmployeeDAO {
         return employee;
     }
     
+    /**
+     * Fungsi untuk menyimpan data baru ke dalam tabel Employees, atau menghapus data yang terdapat di tabel Employees.
+     * @param employee untuk fungsi save, masukkan ID, First_name, Last_name, Email, Phone_number, Hire_date, Job, Salary, Commision_pct, Manager, dan Department pada kotak yang disediakan. Untuk delete, hanya masukkan ID di kotak yang disediakan.
+     * @param isSave jika TRUE maka menjalankan fungsi SAVE, jika FALSE maka menjalankan fungsi DELETE.
+     * @return untuk SAVE, data baru akan tersimpan di tabel Employees, untuk DELETE, data pada tabel Employees akan dihapus sesuai dengan ID yang ditentukan.
+     */
     public boolean saveOrDelete(Employee employee, boolean isSave){
         boolean result = false;
         session = this.factory.openSession();
