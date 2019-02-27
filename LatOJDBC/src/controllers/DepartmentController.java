@@ -35,12 +35,12 @@ public class DepartmentController {
         if (ddao.saveordelete(new Department(new Short(id), name, new Employee(new Integer(manager)), new Location(location)), true)) return "Insert berhasil.";
         else return "UPDATE FAILED";
     }
+    
     public String delete(String id){
         if (ddao.saveordelete(new Department(new Short(id)), false)) return "RECORD SUCCESSFULLY DELETED";
         else return "DELETE FAILED";
     }
     
-
     public Department getById(String key) {
         return ddao.getId(key);
     }
