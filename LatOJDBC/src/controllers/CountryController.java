@@ -6,9 +6,10 @@
 package controllers;
 
 import daos.CountryDAO;
-import java.sql.Connection;
+import java.math.BigDecimal;
 import java.util.List;
 import models.Country;
+import org.hibernate.SessionFactory;
 
 /**
  *
@@ -17,66 +18,48 @@ import models.Country;
 public class CountryController {
     
     private CountryDAO cdao;
-    
-    public CountryController(Connection connection) {
-        cdao = new CountryDAO(connection);
+
+    public CountryController(SessionFactory sessionFactory) {
+        cdao=new CountryDAO(sessionFactory);
     }
     
-    /**
-     * Fungsi untuk memasukkan data ke dalam tabel Countries.
-     * @param country_id masukkan ID
-     * @param country_name masukkan NAMA
-     * @param region_id masukkan ID region nya
-     * @return Akan tampil data baru di tabel Countries.
-     */
-    public String insert(String country_id, String country_name, String region_id){
-        String result="";
-        if (cdao.save(new Country(country_id, country_name, Integer.parseInt(region_id)), true)) {
-            result="OK! Data berhasil disimpan.";
-        } else {
-            result="OOPS! data gagal disimpan.";
+    
+     public String insert(String id, String name){
+        if (cdao.saveOrDelete(new Country(id), true)) {
+             return "Selamat Data Berhasil di Input";
         }
-        return result;
+         return "Maaf Anda Gagal memasukkan data";
     }
     
-    /**
-     * Fungsi untuk menghapus data di tabel Countries berdasarkan country_id.
-     * @param country_id masukkan ID yang akan di hapus
-     * @return Data pada tabel Countries akan dihapus.
-     */
-    public String delete(String country_id){
-        String result="";
-          if (cdao.delete(country_id)) {
-            result="OK! Data berhasil dihapus.";
-        } else {
-            result="OOPS! data gagal dihapus.";
+    public String delete(String id){
+        if (cdao.saveOrDelete(new Country(id), false)) {
+             return "Selamat Berhasil menghapus data";
         }
-        return result;
+         return "Maaf Anda Gagal menghapus data";
+  
+        
     }
     
-    /**
-     * Fungsi yang digunakan untuk memperbarui data yang sudah ada pada tabel Countries. Data yang diperbarui dapat berupa country_id, country_name, atau region_id.
-     * @param country_id masukkan ID
-     * @param country_name masukkan NAMA
-     * @param region_idmasukkan ID region nya
-     * @return Data pada tabel Countries akan berubah.
-     */
-    public String update(String country_id, String country_name, String region_id){
-        String result="";
-        if (cdao.save(new Country(country_id, country_name, Integer.parseInt(region_id)), false)) {
-            result="OK! Data berhasil disimpan.";
-        } else {
-            result="OOPS! data gagal disimpan.";
+    public String update(String id, String name){
+        if (cdao.saveOrDelete(new Country(new String(id),name), true)) {
+             return "Selamat Data Berhasil di Update";
         }
-        return result;
+         return "Maaf Anda Gagal melakukan update";
+
+        
     }
     
-    
-    public List<Country> getAllData(){
-        return cdao.getData("", false);
+    public List<Country> select(){
+        return cdao.getAll();
+        
+    }
+    public List<Country> searchBy(String key){
+        return cdao.searchBy(key);
+        
     }
     
-    public List<Country> searchData(Object keyword, boolean isById){
-        return cdao.getData(keyword, isById);
+    public Country getById(String key){
+        return cdao.getById(new BigDecimal(key));
+        
     }
 }
