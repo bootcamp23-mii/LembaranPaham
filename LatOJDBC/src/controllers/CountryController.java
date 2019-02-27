@@ -6,7 +6,6 @@
 package controllers;
 
 import daos.CountryDAO;
-import java.math.BigDecimal;
 import java.util.List;
 import models.Country;
 import org.hibernate.SessionFactory;
@@ -24,7 +23,7 @@ public class CountryController {
     }
     
     
-     public String insert(String id, String name){
+     public String insert(String id, String name, String region){
         if (cdao.saveOrDelete(new Country(id), true)) {
              return "Selamat Data Berhasil di Input";
         }
