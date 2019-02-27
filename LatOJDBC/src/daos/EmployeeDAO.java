@@ -5,9 +5,6 @@
  */
 package daos;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import models.Employee;
@@ -28,12 +25,17 @@ public class EmployeeDAO {
         this.factory = factory;
     }
     
-    public List<Region> getAll(){
-        List<Region> regions = new ArrayList<>();
+    public List<Employee> Search(Object keyword){
+        List<Employee> employees = new ArrayList<>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            regions = session.createQuery("FROM Region order by id").list();
+            employees = session.createQuery("FROM Employee WHERE id like '%" + keyword +
+                    "%' or firstName like '%" + keyword + "%' or lastName like '%" + keyword + 
+                    "%' or email like '%" + keyword + "%' or phoneNumber like '%" + keyword + 
+                    "%' or hireDate like '%" + keyword + "%' or job like '%" + keyword + 
+                    "%' or salary like '%" + keyword + "%' or commissionPct like '%" + keyword + 
+                    "%' or manager like '%" + keyword + "%' or department like '%" + keyword+"%' ORDER BY 1").list();
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,15 +43,15 @@ public class EmployeeDAO {
         } finally {
             session.close();
         }
-        return regions;
+        return employees;
     }
     
-    public List<Region> Search(Object word){
-        List<Region> regions = new ArrayList<>();
+    public Employee SearchById(Object word){
+        Employee employee = new Employee();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            regions = session.createQuery("from Region where id like '%"+word+"%' or name like '%"+word+"%' order by id").list();
+            employee = (Employee) session.createQuery("from Employee where id = "+word+" order by 1").list().get(0);
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,33 +59,16 @@ public class EmployeeDAO {
         } finally {
             session.close();
         }
-        return regions;
+        return employee;
     }
     
-    public Region SearchById(Object word){
-        Region regions = new Region();
-        session = this.factory.openSession();
-        transaction = session.beginTransaction();
-        try {
-            regions = (Region) session.createQuery("from Region where id = "+word+" order by id").list().get(0);
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (transaction!=null) transaction.rollback();
-        } finally {
-            session.close();
-        }
-        return regions;
-    }
-    
-    public boolean saveOrDelete(Region region, boolean isSave){
+    public boolean saveOrDelete(Employee employee, boolean isSave){
         boolean result = false;
-        List<Region> regions = new ArrayList<>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            if (isSave) session.saveOrUpdate(region);
-            else session.delete(region);
+            if (isSave) session.saveOrUpdate(employee);
+            else session.delete(employee);
             transaction.commit();
             result = true;
         } catch (Exception e) {

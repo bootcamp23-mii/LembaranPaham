@@ -20,13 +20,13 @@ public class LocationMain {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        DBConnection connection = new DBConnection();
-        System.out.println(connection.getConnection());
-
-        LocationDAO ldao = new LocationDAO(connection.getConnection());
-
-        LocationController lc = new LocationController(connection.getConnection());
-        
+//        DBConnection connection = new DBConnection();
+//        System.out.println(connection.getConnection());
+//
+//        LocationDAO ldao = new LocationDAO(connection.getConnection());
+//
+//        LocationController lc = new LocationController(connection.getConnection());
+//        
 
 //        for (Location location : ldao.getData("1001", true)) {
 //            System.out.println("ID              : " + location.getId());

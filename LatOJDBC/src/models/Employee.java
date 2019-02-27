@@ -96,6 +96,22 @@ public class Employee implements Serializable {
         this.hireDate = hireDate;
     }
 
+    public Employee(Integer id, String firstName, String lastName, String email, String phoneNumber, Date hireDate, Job job, BigDecimal salary, BigDecimal commissionPct, Employee manager, Department department) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.hireDate = hireDate;
+        this.job = job;
+        this.salary = salary;
+        this.commissionPct = commissionPct;
+        this.manager = manager;
+        this.department = department;
+    }
+
+    
+    
     public Integer getId() {
         return id;
     }
