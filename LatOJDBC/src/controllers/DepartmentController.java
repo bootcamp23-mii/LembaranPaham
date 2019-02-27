@@ -28,16 +28,16 @@ public class DepartmentController {
 
     public String insert(String id, String name, String manager, Short location){
         if (ddao.saveordelete(new Department(new Short(id), name, new Employee(new Integer(manager)), new Location(location)), true)) return "Insert berhasil.";
-        else return "Insert gagal";
+        else return "FAIL TO INSERT RECORD";
     }
     
     public String update(String id, String name, String manager, Short location){
         if (ddao.saveordelete(new Department(new Short(id), name, new Employee(new Integer(manager)), new Location(location)), true)) return "Insert berhasil.";
-        else return "Insert gagal";
+        else return "UPDATE FAILED";
     }
     public String delete(String id){
         if (ddao.saveordelete(new Department(new Short(id)), false)) return "RECORD SUCCESSFULLY DELETED";
-        else return "Insert gagal";
+        else return "DELETE FAILED";
     }
     
 
