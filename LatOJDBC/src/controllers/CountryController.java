@@ -19,8 +19,8 @@ public class CountryController {
     
     private CountryDAO cdao;
 
-    public CountryController(SessionFactory sessionFactory) {
-        cdao=new CountryDAO(sessionFactory);
+    public CountryController(SessionFactory factory) {
+        cdao=new CountryDAO(factory);
     }
     
     
@@ -49,17 +49,17 @@ public class CountryController {
         
     }
     
-    public List<Country> select(){
+    public List<Country> getAll(){
         return cdao.getAll();
         
     }
-    public List<Country> searchBy(String key){
+    public List<Country> searchBy(Object key){
         return cdao.searchBy(key);
         
     }
     
-    public Country getById(String key){
-        return cdao.getById(new BigDecimal(key));
+    public Country getById(Object key){
+        return cdao.getById(key);
         
     }
 }

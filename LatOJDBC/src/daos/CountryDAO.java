@@ -24,9 +24,6 @@ public class CountryDAO {
     private SessionFactory factory;
     private Transaction transaction;
 
-    public CountryDAO() {
-    }
-
     public CountryDAO(SessionFactory factory) {
         this.factory = factory;
     }
@@ -101,7 +98,7 @@ public class CountryDAO {
         return result;
     }
 
-    public Country getById(BigDecimal id) {
+    public Country getById(Object id) {
 
         Country country = new Country();
         session = this.factory.openSession();
@@ -120,7 +117,7 @@ public class CountryDAO {
         return country;
     }
 
-    public List<Country> searchBy(String key) {
+    public List<Country> searchBy(Object key) {
         List<Country> listcountry = new ArrayList<>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();

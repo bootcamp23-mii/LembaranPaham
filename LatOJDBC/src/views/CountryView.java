@@ -386,7 +386,7 @@ public class CountryView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btClearActionPerformed
 
     private void btSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchActionPerformed
-        showAllCountryTable(cc.searchData(tfSearch.getText(), chbCekById.isSelected()));
+        showAllCountryTable(cc.searchBy(title));
     }//GEN-LAST:event_btSearchActionPerformed
     
     
@@ -394,7 +394,7 @@ public class CountryView extends javax.swing.JInternalFrame {
         DefaultTableModel tabelCountries = (DefaultTableModel) tbCountries.getModel();
         tabelCountries.setRowCount(0);
         int hitung = 1;
-        for (models.Country values : cc.getAllData()) {
+        for (models.Country values : cc.getById(title)) {
             Object[] data = {hitung, values.getCountry_id(), values.getCountry_name(), values.getRegion_id()};
             tabelCountries.addRow(data);
             hitung++;
