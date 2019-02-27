@@ -11,95 +11,87 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import models.Employee;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 /**
  *
- * @author Panji Sadewo
+ * @author FES
  */
 public class EmployeeDAO {
-
-    private Connection connection;
+    private SessionFactory factory;
+    private Session session;
+    private Transaction transaction;
     
-    public EmployeeDAO(Connection connection) {
-        this.connection = connection;
+    public EmployeeDAO(SessionFactory factory) {
+        this.factory = factory;
     }
     
-    /**
-     * Method yang digunakan untuk mencari data pada tabel EMPLOYEES
-     * @param keyword kata kunci untuk mencari data
-     * @param isById <p>True: mencari data melalui ID.<p>False: mencari data dengan kata kunci di setiap atribut tabel.
-     * @return 
-     */
-    public List<Employee> getData(Object keyword, boolean isGetById) {
-        List<Employee> listEmployee = new ArrayList<Employee>();
-        String query = "";
-        if (isGetById) {
-            query = "SELECT * FROM Employees WHERE EMPLOYEE_ID = " + keyword+ " ORDER BY 1";
-        } else {
-            query = "SELECT * FROM Employees WHERE EMPLOYEE_ID like '%" + keyword +
-                    "%' or FIRST_NAME like '%" + keyword + "%' or LAST_NAME like '%" + keyword + 
-                    "%' or EMAIL like '%" + keyword + "%' or PHONE_NUMBER like '%" + keyword + 
-                    "%' or HIRE_DATE like '%" + keyword + "%' or JOB_ID like '%" + keyword + 
-                    "%' or SALARY like '%" + keyword + "%' or COMMISSION_PCT like '%" + keyword + 
-                    "%' or MANAGER_ID like '%" + keyword + "%' or DEPARTMENT_ID like '%" + keyword+"%' ORDER BY 1";
-        }
+    public List<Region> getAll(){
+        List<Region> regions = new ArrayList<>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement prepareStatment = connection.prepareStatement(query);
-            ResultSet resultSet = prepareStatment.executeQuery();
-            while (resultSet.next()) {
-                listEmployee.add(new Employee(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7), resultSet.getInt(8), resultSet.getDouble(9), resultSet.getInt(10), resultSet.getInt(11)));
-            }
+            regions = session.createQuery("FROM Region order by id").list();
+            transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
+            if (transaction!=null) transaction.rollback();
+        } finally {
+            session.close();
         }
-        return listEmployee;
+        return regions;
     }
-  
-    /**
-     * Method yang berfungsi untuk melakukan insert dan update data dari table EMPLOYEES
-     * @param e Berisi data dari object Employee
-     * @param isInsert <p>True: method akan digunakan untuk insert data.<p>False: method akan digunakan untuk update data.
-     * @return <p>True: method berhasil dijalankan.<p>False: method gagal dijalankan.
-     */
-    public boolean save(Employee e, boolean isInsert) {
-        boolean result = false;
-        String query = "";
-        if (isInsert) {
-            query = "INSERT INTO EMPLOYEES (EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,HIRE_DATE,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES ("+e.getEmployeeId()+
-                    ",'"+ e.getFirst_name()+"','"+ e.getLast_name()+"','"+e.getEmail()+"','"+e.getPhone_number()+"',TO_DATE('"+e.getHire_date()+"','yyyy-mm-dd'),'"+e.getJob_id()+"',"+e.getSalary()+","+e.getCommission_pct()+","+e.getManager_id()+","+e.getDepartment_id()+")";
-        } else {
-            query = "UPDATE EMPLOYEES SET FIRST_NAME='"+e.getFirst_name()+"',LAST_NAME='"+e.getLast_name()+
-                    "',EMAIL='"+e.getEmail()+"',PHONE_NUMBER='"+e.getPhone_number()+"',HIRE_DATE=TO_DATE('"+e.getHire_date()+"','yyyy-mm-dd'),JOB_ID='"+e.getJob_id()+
-            "',SALARY="+e.getSalary()+",COMMISSION_PCT="+e.getCommission_pct()+",MANAGER_ID="+e.getManager_id()+",DEPARTMENT_ID="+e.getDepartment_id()+" WHERE EMPLOYEE_ID="+e.getEmployeeId();
-        }
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.executeQuery();
-            result = true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return result;
-    }
-        
     
-    /**
-     * Method yang berfungsi untuk melakukan delete data dari table EMPLOYEES
-     * @param id ID employee yang akan dihapus
-     * @return <p>True: method berhasil dijalankan.<p>False: method gagal dijalankan.
-     */
-    public boolean delete(int id){
-        boolean result = false;
-        String query = "DELETE FROM EMPLOYEES WHERE EMPLOYEE_ID = ?";
+    public List<Region> Search(Object word){
+        List<Region> regions = new ArrayList<>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);            
-            preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            regions = session.createQuery("from Region where id like '%"+word+"%' or name like '%"+word+"%' order by id").list();
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction!=null) transaction.rollback();
+        } finally {
+            session.close();
+        }
+        return regions;
+    }
+    
+    public Region SearchById(Object word){
+        Region regions = new Region();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            regions = (Region) session.createQuery("from Region where id = "+word+" order by id").list().get(0);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction!=null) transaction.rollback();
+        } finally {
+            session.close();
+        }
+        return regions;
+    }
+    
+    public boolean saveOrDelete(Region region, boolean isSave){
+        boolean result = false;
+        List<Region> regions = new ArrayList<>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            if (isSave) session.saveOrUpdate(region);
+            else session.delete(region);
+            transaction.commit();
             result = true;
         } catch (Exception e) {
-            e.getStackTrace();
+            e.printStackTrace();
+            if (transaction!=null) transaction.rollback();
+        } finally {
+            session.close();
         }
-        
         return result;
     }
     

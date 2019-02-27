@@ -23,6 +23,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import models.Job;
+import org.hibernate.SessionFactory;
+import tools.HibernateUtil;
 
 /**
  *
@@ -30,9 +32,10 @@ import models.Job;
  */
 public class HRView extends javax.swing.JFrame {
 
+    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-    DBConnection connection = new DBConnection();
-    UserController uc = new UserController(connection.getConnection());
+//    UserController uc = new UserController(sessionFactory);
+    
 
     /**
      * Creates new form NewJFrame
