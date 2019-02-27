@@ -38,8 +38,8 @@ public class LocationController {
         }
     }
     
-   public String delete(String locationId){
-        if(ldao.saveOrDelete(new Location(new Short(locationId)),false)){
+   public String delete(String locationId, String city){
+        if(ldao.saveOrDelete(new Location(new Short(locationId),city),false)){
             return "Terhapus";
         }else{
             return "Maaf coba lagi";
