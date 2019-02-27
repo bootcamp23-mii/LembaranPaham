@@ -6,13 +6,10 @@
 package daos;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import models.Department;
 
 import java.util.ArrayList;
 import java.util.List;
-import models.Region;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -32,7 +29,7 @@ public class DepartmentDAO {
         this.connection = connection;
     }
 
-    public List<Department> getAll() {
+    public List<Department> getAll(Object keyword) {
         List<Department> department = new ArrayList<>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
@@ -45,6 +42,22 @@ public class DepartmentDAO {
             }
         }
 
+        return department;
+    }
+    
+    public Department getId(Object keyword){
+        Department department = new Department();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            department = (Department) session.createQuery("from department where id = "+keyword+" order by 1").list().get(0);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction!=null) transaction.rollback();
+        } finally {
+            session.close();
+        }
         return department;
     }
 

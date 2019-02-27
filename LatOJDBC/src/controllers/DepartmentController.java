@@ -9,6 +9,8 @@ import daos.DepartmentDAO;
 import java.sql.Connection;
 import java.util.List;
 import models.Department;
+import models.Employee;
+import models.Location;
 
 /**
  *
@@ -23,82 +25,31 @@ public class DepartmentController {
         ddao = new DepartmentDAO(connection);
     }
 
-    public String insert(String id, String name, String manager_id, String location_id) {
-        String result = "";
-        if (ddao.save(new Department(Integer.parseInt(id), name, Integer.parseInt(manager_id),
-                Integer.parseInt(location_id)), true)) {
-            result = "selamat data berhasil disimpan";
-        } else {
-            result = "maaf, data tidak berhasil disimpan";
-        }
-        return result;
-    }
 
-    public String delete(String id) {
-        String result = "";
-        if (ddao.delete(Integer.parseInt(id))) {
-            result = "selamat data berhasil dihapus";
-        } else {
-            result = "Maaf, data gagal dihapus";
-        }
-        return result;
+    public String insert(String id, String name, String manager, Short location){
+        if (ddao.saveordelete(new Department(new Short(id), name, new Employee(new Integer(manager)), new Location(location)), true)) return "Insert berhasil.";
+        else return "Insert gagal";
     }
-
-    public String update(String id, String department_name, String manager_id, String location_id) {
-        String result = "";
-        if (ddao.save(new Department(Integer.parseInt(id), department_name,
-                 Integer.parseInt(manager_id), Integer.parseInt(location_id)), false)) {
-            result = "Selamat data berhasil disimpan";
-        } else {
-            result = "maaf data gagal disimpan";
-        }
-        return result;
+    
+    public String update(String id, String name, String manager, Short location){
+        if (ddao.saveordelete(new Department(new Short(id), name, new Employee(new Integer(manager)), new Location(location)), true)) return "Insert berhasil.";
+        else return "Insert gagal";
     }
-
-    public String getData(String keyword, boolean isGetById) {
-        String result = "";
-        if (keyword.equals("") && !isGetById) {
-            if (ddao.getData(keyword, isGetById).isEmpty()) {
-                System.out.println("Data tidak ditemukan");
-            } else {
-                System.out.println("Data berhasil dilihat");
-            }
-
-        } else if (!keyword.equals("") && !isGetById) {
-            if (ddao.getData(keyword, isGetById).isEmpty()) {
-                System.out.println("Data tidak ditemukan");
-            } else {
-                System.out.println("Data berhasil dilihat");
-            }
-        } else if (!keyword.equals("") && isGetById) {
-            if (ddao.getData(keyword, isGetById).isEmpty()) {
-                System.out.println("Data tidak ditemukan");
-            } else {
-                System.out.println("Data berhasil dilihat");
-            }
-        } else if (keyword.equals("") && isGetById) {
-            if (ddao.getData(keyword, isGetById).isEmpty()) {
-                System.out.println("Data tidak ditemukan");
-            } else {
-                System.out.println("Data berhasil dilihat");
-            }
-        }
-        return result;
+    public String delete(String id){
+        if (ddao.saveordelete(new Department(new Short(id)), false)) return "RECORD SUCCESSFULLY DELETED";
+        else return "Insert gagal";
     }
+    
 
     public Department getById(String key) {
-        return ddao.getData(key, true).get(0);
+        return ddao.getId(key);
     }
 
     public List<Department> seachBy(String key) {
-        List result;
-        result = ddao.getData(key, false);
-        return result;
+        return ddao.getAll(key);
     }
     
      public List<Department> getAll() {
-        List result;
-        result = ddao.getData("", false);
-        return result;
+        return ddao.getAll("");
     }
 }
