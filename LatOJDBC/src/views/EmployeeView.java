@@ -10,12 +10,18 @@ import controllers.EmployeeController;
 import controllers.JobController;
 import controllers.JobHistoryController;
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import models.Department;
 import models.Employee;
+import org.hibernate.SessionFactory;
 import tools.DBConnection;
+import tools.HibernateUtil;
 
 /**
  *
@@ -23,25 +29,23 @@ import tools.DBConnection;
  */
 public class EmployeeView extends javax.swing.JInternalFrame {
 
-    DBConnection connection = new DBConnection();
-    EmployeeController ec = new EmployeeController(connection.getConnection());
-    JobHistoryController jhc = new JobHistoryController(connection.getConnection());
-    JobController jc = new JobController(connection.getConnection());
-    DepartmentController dc = new DepartmentController(connection.getConnection());
-    List<Employee> employeeList = new ArrayList<>();
-    List<models.Job> jobList = new ArrayList<>();
-    List<models.Department> departmentList = new ArrayList<>();
+    private SessionFactory factory = HibernateUtil.getSessionFactory();
+    private EmployeeController ec = new EmployeeController(factory);
+    private List<Employee> employeeList = new ArrayList<>();
+    private List<models.Job> jobList = new ArrayList<>();
+    private List<models.Department> departmentList = new ArrayList<>();
     
-    DefaultTableModel tableModel;
+    private DefaultTableModel tableModel;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
     /**
      * Creates new form NewJInternalFrame
      */
     public EmployeeView() {
         initComponents();
-        showAllEmployeeTable(ec.getAllData());
-        showAllEmployee(ec.getAllData());
-        showAllJob(jc.getAll());
-        showAllDepartment(dc.seachBy(""));
+        showAllEmployeeTable(ec.getAll());
+        showAllEmployee(ec.getAll());
+        showAllJob();
+        showAllDepartment();
         setComboBox();
     }
     
@@ -79,42 +83,51 @@ public class EmployeeView extends javax.swing.JInternalFrame {
     }
     
     private boolean isEmpty() {
-        return ec.searchData(tfEmployeeEmployeeId.getText(),true).isEmpty();
+        return ec.getData(tfEmployeeEmployeeId.getText(),true).isEmpty();
     }
     
     private void setComboBox(){
-        for (models.Job data : jobList) cbEmployeeJobId.addItem(data.getId()+" - "+data.getName());
-        for (Employee data : employeeList) cbEmployeeManagerId.addItem(data.getEmployeeId()+" - "+data.getFirst_name()+" "+data.getLast_name());
+        for (models.Job data : jobList) cbEmployeeJobId.addItem(data.getId()+" - "+data.getTitle());
+        for (Employee data : employeeList) cbEmployeeManagerId.addItem(data.getId()+" - "+data.getFirstName()+" "+data.getLastName());
         for (models.Department data : departmentList) cbEmployeeDepartmentId.addItem(data.getId()+" - "+data.getName());
     }
     
     private void showAllEmployeeTable(List<Employee> employees){
-        Object[] columnNames = {"Nomor", "Employee ID", "First Name", "Last Name", "Email", "Phone Number", "Hire Date", "Job ID", "Salary", "Commission PCT", "Manager ID", "Department ID"};
+        Object[] columnNames = {"Nomor", "Employee ID", "First Name", "Last Name", "Email", "Phone Number", "Hire Date", "Job", "Salary", "Commission PCT", "Manager", "Department"};
         Object[][] data = new Object[employees.size()][columnNames.length];
         for (int i = 0; i < data.length; i++) {
             data[i][0] = (i + 1);
-            data[i][1] = employees.get(i).getEmployeeId();
-            data[i][2] = employees.get(i).getFirst_name();
-            data[i][3] = employees.get(i).getLast_name();
+            data[i][1] = employees.get(i).getId();
+            data[i][2] = employees.get(i).getFirstName();
+            data[i][3] = employees.get(i).getLastName();
             data[i][4] = employees.get(i).getEmail();
-            data[i][5] = employees.get(i).getPhone_number();
-            data[i][6] = employees.get(i).getHire_date();
-            data[i][7] = employees.get(i).getJob_id();
+            data[i][5] = employees.get(i).getPhoneNumber();
+            data[i][6] = employees.get(i).getHireDate();
+            data[i][7] = employees.get(i).getJob().getId();
             data[i][8] = employees.get(i).getSalary();
-            data[i][9] = employees.get(i).getCommission_pct();
-            data[i][10] = employees.get(i).getManager_id();
-            data[i][11] = employees.get(i).getDepartment_id();
+            if (employees.get(i).getCommissionPct()!=null)data[i][9] = employees.get(i).getCommissionPct();
+            else data[i][9] = 0;
+            if (employees.get(i).getManager()!=null) data[i][10] = employees.get(i).getManager().getId()+"";
+            else data[i][10] = "";
+            if (employees.get(i).getDepartment()!=null)data[i][11] = employees.get(i).getDepartment().getId()+"";
+            else data[i][11] = "";
         }
         tableModel = new DefaultTableModel(data, columnNames);
         tbEmployee.setModel(tableModel);
     }
     
-    private void showAllJob(List<models.Job> jobs){
-        jobList = jobs;
+    private void showAllJob(){
+        for (Employee employee : employeeList) {
+            if (!jobList.contains(employee.getJob()))jobList.add(new models.Job(employee.getJob().getId(), employee.getJob().getTitle()));
+        }
     }
     
-    private void showAllDepartment(List<models.Department> departments){
-        departmentList = departments;
+    private void showAllDepartment(){
+        for (Employee employee : employeeList) {
+            for (Department department : employee.getDepartmentList()) {
+                departmentList.add(department);
+            }
+        }
     }
     
     private void showAllEmployee (List<Employee> employees){
@@ -428,7 +441,7 @@ public class EmployeeView extends javax.swing.JInternalFrame {
                     e.printStackTrace();
                 }
             }
-            showAllEmployeeTable(ec.getAllData());
+            showAllEmployeeTable(ec.getAll());
         }
     }//GEN-LAST:event_btEmployeeInsertActionPerformed
 
@@ -442,40 +455,46 @@ public class EmployeeView extends javax.swing.JInternalFrame {
                         "Anda yakin akan menghapus data?", "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE
                 );
                 if (reply == JOptionPane.YES_OPTION) {
-                    JOptionPane.showMessageDialog(null, ec.delete(tfEmployeeEmployeeId.getText()));
+                    JOptionPane.showMessageDialog(null, ec.delete(tfEmployeeEmployeeId.getText(), tfEmployeeFirstName.getText(), 
+                                tfEmployeeLastName.getText(), tfEmployeeEmail.getText(), tfEmployeePhoneNumber.getText(), 
+                                tfEmployeeHireDate.getText(), cbEmployeeJobId.getSelectedItem().toString().split(" - ")[0], 
+                                tfEmployeeSalary.getText(), tfEmployeeCommissionPct.getText(), 
+                                cbEmployeeManagerId.getSelectedItem().toString().split(" - ")[0], 
+                                cbEmployeeDepartmentId.getSelectedItem().toString().split(" - ")[0]));
                     tfEmployeeSearch.setText("");
-                    showAllEmployeeTable(ec.getAllData());
+                    showAllEmployeeTable(ec.getAll());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        showAllEmployeeTable(ec.getAllData());
+        showAllEmployeeTable(ec.getAll());
     }//GEN-LAST:event_btEmployeeDeleteActionPerformed
 
     private void btEmployeeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeSearchActionPerformed
-        if(!chbEmployeeisGetById.isSelected())showAllEmployeeTable(ec.searchData(tfEmployeeSearch.getText(), chbEmployeeisGetById.isSelected()));
+        if(!chbEmployeeisGetById.isSelected())showAllEmployeeTable(ec.getData(tfEmployeeSearch.getText(), chbEmployeeisGetById.isSelected()));
         else {
             Employee data = ec.getById(tfEmployeeSearch.getText());
-            tfEmployeeEmployeeId.setText(data.getEmployeeId()+"");
+            tfEmployeeEmployeeId.setText(data.getId()+"");
             tfEmployeeEmployeeId.setEnabled(false);
-            tfEmployeeFirstName.setText(data.getFirst_name());
-            tfEmployeeLastName.setText(data.getLast_name());
+            tfEmployeeFirstName.setText(data.getFirstName());
+            tfEmployeeLastName.setText(data.getLastName());
             tfEmployeeEmail.setText(data.getEmail());
-            tfEmployeePhoneNumber.setText(data.getPhone_number());
-            tfEmployeeHireDate.setText(data.getHire_date());
+            tfEmployeePhoneNumber.setText(data.getPhoneNumber());
+            tfEmployeeHireDate.setText(data.getHireDate().toString());
             for (int i = 0; i < cbEmployeeJobId.getItemCount(); i++) {
-                if (cbEmployeeJobId.getItemAt(i).split(" - ")[0].equals(data.getJob_id()))
+                if (cbEmployeeJobId.getItemAt(i).split(" - ")[0].equals(data.getJob().getId()))
                     cbEmployeeJobId.setSelectedIndex(i);
             }
             tfEmployeeSalary.setText(data.getSalary()+"");
-            tfEmployeeCommissionPct.setText(data.getCommission_pct()+"");
+            if(data.getCommissionPct()!=null)tfEmployeeCommissionPct.setText(data.getCommissionPct()+"");
+            else tfEmployeeCommissionPct.setText("0");
             for (int i = 0; i < cbEmployeeManagerId.getItemCount(); i++) {
-                if (cbEmployeeManagerId.getItemAt(i).split(" - ")[0].equals(data.getManager_id()+""))
+                if (cbEmployeeManagerId.getItemAt(i).split(" - ")[1].equals(data.getManager().getId()+""))
                     cbEmployeeManagerId.setSelectedIndex(i);
             }
             for (int i = 0; i < cbEmployeeDepartmentId.getItemCount(); i++) {
-                if (cbEmployeeDepartmentId.getItemAt(i).split(" - ")[0].equals(data.getDepartment_id()+""))
+                if (cbEmployeeDepartmentId.getItemAt(i).split(" - ")[1].equals(data.getDepartment().getId()+""))
                     cbEmployeeDepartmentId.setSelectedIndex(i);
             }
         }

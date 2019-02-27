@@ -28,19 +28,21 @@ public class EmployeeDAO {
     /**
      * Fungsi untuk mencari data yang terdapat di tabel Employees. Data yang dicari dapat berupa ID, First_name, Last_name, Email, Phone_number, Hire_date, Job, Salary, Commision_pct, Manager, atau Department.
      * @param keyword berupa angka atau huruf.
+     * @param isById 
      * @return Menampilkan data pada tabel sesuai keyword yang dicari.
      */
-    public List<Employee> Search(Object keyword){
+    public List<Employee> Search(Object keyword, boolean isById){
         List<Employee> employees = new ArrayList<>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            employees = session.createQuery("FROM Employee WHERE id like '%" + keyword +
+            if (isById) employees = session.createQuery("from Employee where id = "+keyword).list();
+            else employees = session.createQuery("FROM Employee WHERE id like '%" + keyword +
                     "%' or firstName like '%" + keyword + "%' or lastName like '%" + keyword + 
                     "%' or email like '%" + keyword + "%' or phoneNumber like '%" + keyword + 
                     "%' or hireDate like '%" + keyword + "%' or job like '%" + keyword + 
                     "%' or salary like '%" + keyword + "%' or commissionPct like '%" + keyword + 
-                    "%' or manager like '%" + keyword + "%' or department like '%" + keyword+"%' ORDER BY 1").list();
+                    "%' or manager like '%" + keyword + "%' or department like '%" + keyword+"%' order by 1").list();
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,27 +51,6 @@ public class EmployeeDAO {
             session.close();
         }
         return employees;
-    }
-    
-    /**
-     * Fungsi untuk mencari data pada tabel Employees berdasarkan ID Employee.
-     * @param word id Employee yang dicari, dapat berupa angka atau huruf.
-     * @return Menampilkan data pada tabel Employees sesuai ID yang dicari
-     */
-    public Employee SearchById(Object word){
-        Employee employee = new Employee();
-        session = this.factory.openSession();
-        transaction = session.beginTransaction();
-        try {
-            employee = (Employee) session.createQuery("from Employee where id = "+word+" order by 1").list().get(0);
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (transaction!=null) transaction.rollback();
-        } finally {
-            session.close();
-        }
-        return employee;
     }
     
     /**

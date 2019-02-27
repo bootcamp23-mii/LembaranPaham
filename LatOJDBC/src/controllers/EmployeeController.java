@@ -8,9 +8,14 @@ package controllers;
 import daos.EmployeeDAO;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import models.Department;
 import models.Employee;
 import models.Job;
@@ -47,8 +52,14 @@ public class EmployeeController {
      * @return Data baru akan masuk ke dalam tabel Employees.
      */
     public String insert(String id, String firstName, String lastName, String email, String phoneNumber, String hireDate, String job, String salary, String commissionPct, String manager, String department){
-        if (edao.saveOrDelete(new Employee(new Integer(id), firstName, lastName, email, phoneNumber, new Date(hireDate), new Job(job), new BigDecimal(salary), new BigDecimal(commissionPct), new Employee(new Integer(manager)), new Department(new Short(department))), true)) return "Insert berhasil.";
-        else return "Insert gagal";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        try {
+            Date date = dateFormat.parse(hireDate);
+            if (edao.saveOrDelete(new Employee(new Integer(id), firstName, lastName, email, phoneNumber, date, new Job(job), new BigDecimal(salary), new BigDecimal(commissionPct), new Employee(new Integer(manager)), new Department(new Short(department))), true)) return "Save berhasil.";
+        } catch (ParseException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "Save gagal";
     }
     
     /**
@@ -67,8 +78,14 @@ public class EmployeeController {
      * @return  Data yang dipilih pada tabel Employees berubah sesuai input yang telah dimasukkan.
      */
     public String update(String id, String firstName, String lastName, String email, String phoneNumber, String hireDate, String job, String salary, String commissionPct, String manager, String department){
-        if (edao.saveOrDelete(new Employee(new Integer(id), firstName, lastName, email, phoneNumber, new Date(hireDate), new Job(job), new BigDecimal(salary), new BigDecimal(commissionPct), new Employee(new Integer(manager)), new Department(new Short(department))), true)) return "Update berhasil.";
-        else return "Update gagal";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        try {
+            Date date = dateFormat.parse(hireDate);
+            if (edao.saveOrDelete(new Employee(new Integer(id), firstName, lastName, email, phoneNumber, date, new Job(job), new BigDecimal(salary), new BigDecimal(commissionPct), new Employee(new Integer(manager)), new Department(new Short(department))), true)) return "Save berhasil.";
+        } catch (ParseException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "Save gagal";
     }
     
     /**
@@ -76,9 +93,15 @@ public class EmployeeController {
      * @param id ID yang terdapat di tabel Employees
      * @return Data pada tabel Employees dihapus sesuai ID yang ditentukan.
      */
-    public String delete(String id){
-        if (edao.saveOrDelete(new Employee(new Integer(id)), false)) return "Insert berhasil.";
-        else return "Insert gagal";
+    public String delete(String id, String firstName, String lastName, String email, String phoneNumber, String hireDate, String job, String salary, String commissionPct, String manager, String department){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        try {
+            Date date = dateFormat.parse(hireDate);
+            if (edao.saveOrDelete(new Employee(new Integer(id), firstName, lastName, email, phoneNumber, date, new Job(job), new BigDecimal(salary), new BigDecimal(commissionPct), new Employee(new Integer(manager)), new Department(new Short(department))), false)) return "Delete berhasil.";
+        } catch (ParseException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "Delete gagal";
     }
     
     /**
@@ -86,7 +109,7 @@ public class EmployeeController {
      * @return Menampilkan seluruh data di tabel Employees.
      */
     public List<Employee> getAll(){
-        return edao.Search("");
+        return edao.Search("",false);
     }
     
     /**
@@ -94,8 +117,8 @@ public class EmployeeController {
      * @param key Keyword yang dicari, dapat berupa angka atau huruf.
      * @return Menampilkan data pada tabel Employees sesuai dengan keyword yang dicari.
      */
-    public List<Employee> getData(Object key){
-        return edao.Search(key);
+    public List<Employee> getData(String key, boolean isById){
+        return edao.Search(key,isById);
     }
     
     /**
@@ -103,8 +126,8 @@ public class EmployeeController {
      * @param key ID yang dicari, dapat berupa angka atau huruf.
      * @return Menampilkan data pada tabel Employees sesuai ID yang dicari.
      */
-    public Employee getById(Object key){
-        return edao.SearchById(key);
+    public Employee getById(String key){
+        return edao.Search(key,false).get(0);
     }
     
 }

@@ -46,10 +46,10 @@ public class LatOJDBC {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         
         System.out.println(sessionFactory);
-        CountryDAO cdao= new CountryDAO(sessionFactory);
-        for (Country country : cdao.getAll()) {
-            System.out.println(country.getName());
-        }
+//        CountryDAO cdao= new CountryDAO(sessionFactory);
+//        for (Country country : cdao.getAll()) {
+//            System.out.println(country.getName());
+//        }
         
     }
 }
