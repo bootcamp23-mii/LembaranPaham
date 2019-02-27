@@ -8,86 +8,67 @@ package daos;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import models.Department;
+
 import java.util.ArrayList;
 import java.util.List;
-import models.Department;
+import models.Region;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 /**
  *
- * @author milhamafemi
+ * @author Pandu
  */
 public class DepartmentDAO {
 
     private Connection connection;
+    private SessionFactory factory;
+    private Session session;
+    private Transaction transaction;
 
     public DepartmentDAO(Connection connection) {
         this.connection = connection;
     }
 
-    public List<Department> getData(Object keyword, boolean isGetById) {
-        List<Department> listDepartment = new ArrayList<Department>();
-        String query = "";
-        if (isGetById) {
-
-            query = "SELECT * FROM DEPARTMENTS WHERE DEPARTMENT_ID= " + keyword;
-
-        } else {
-            query = "SELECT * FROM DEPARTMENTS WHERE DEPARTMENT_ID LIKE '%" + keyword
-                    + "%' OR DEPARTMENT_NAME like '%" + keyword + "%' OR MANAGER_ID LIKE '%" + keyword
-                    + "%' OR LOCATION_ID LIKE '%" + keyword + "%'";
-        }
+    public List<Department> getAll() {
+        List<Department> department = new ArrayList<>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                listDepartment.add(new Department(resultSet.getInt(1), resultSet.getString(2),
-                        resultSet.getInt(3), resultSet.getInt(4)));
-
-            }
+            department = session.createQuery("FROM Region").list();
         } catch (Exception e) {
             e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
-        return listDepartment;
+
+        return department;
     }
 
-    public boolean save(Department d, boolean isInsert) {
+    public boolean saveordelete(Department dept, Boolean isSave) {
         boolean result = false;
-        String query = "";
-        if (isInsert) {
-
-            query = "INSERT INTO DEPARTMENTS(DEPARTMENT_ID,DEPARTMENT_NAME,MANAGER_ID,LOCATION_ID) VALUES(" + d.getId() + ",'"
-                    + d.getName() + "'," + d.getManager_id() + "," + d.getLocation_id()+")";
-        } else {
-
-            query = "UPDATE DEPARTMENTS SET DEPARTMENT_NAME='" + d.getName() + "',MANAGER_ID=" + d.getManager_id()
-                    + ",LOCATION_ID=" + d.getLocation_id() + "WHERE DEPARTMENT_ID=" + d.getId();
-
-        }
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1, d.getName());
-//            preparedStatement.setInt(2, d.getManager_id());
-//            preparedStatement.setInt(3, d.getLocation_id());
-//            preparedStatement.setInt(4, d.getId());
-            preparedStatement.executeQuery();
+            if (isSave) {
+                session.saveOrUpdate(dept);
+            } else {
+                session.delete(dept);
+            }
+            transaction.commit();
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
         }
         return result;
-    }
-
-    public boolean delete(int id) {
-        boolean isDelete = false;
-        String query = "DELETE FROM DEPARTMENTS WHERE DEPARTMENT_ID ='" + id + "'";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.executeQuery();
-            isDelete = true;
-        } catch (Exception e) {
-            e.getStackTrace();
-        }
-        return isDelete;
     }
 
 }
