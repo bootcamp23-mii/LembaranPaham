@@ -5,7 +5,6 @@
  */
 package daos;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import models.Country;
@@ -34,26 +33,6 @@ public class CountryDAO {
      * @param isGetById
      * @return
      */
-    public List<Country> getAll() {
-        List<Country> country = new ArrayList<>();
-        session = this.factory.openSession();
-        transaction = session.beginTransaction();
-
-        try {
-            country = session.createQuery("FROM Country ").list();
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            session.close();
-        }
-
-        return country;
-    }
-
     public boolean saveOrDelete(Country country, boolean isSave) {
         boolean result = false;
         session = this.factory.openSession();
@@ -76,27 +55,29 @@ public class CountryDAO {
         }
         return result;
     }
-    
-    public List<Country> search(Object key,boolean isById){
-         List<Country> listCountry = new ArrayList<>();
+
+    public List<Country> search(Object key, boolean isById) {
+        List<Country> listCountry = new ArrayList<>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
             if (isById) {
-                listCountry=session.createQuery("FROM Country WHERE id = " + key + " order by 1").list();
+                listCountry = session.createQuery("FROM Country WHERE id = " + key + " order by 1").list();
             } else {
-                listCountry=session.createQuery("FROM Country WHERE id like '%"
-                    + key + "%' or name like '%" + key + "%' or region like '%" + key + "%' order by 1").list();
+                listCountry = session.createQuery("FROM Country WHERE id like '%"
+                        + key + "%' or name like '%" + key + "%' or region like '%" + key + "%' order by 1").list();
             }
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            if (transaction!=null) transaction.rollback();
-        }finally {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
             session.close();
         }
         return listCountry;
-        
+
     }
 
 }
