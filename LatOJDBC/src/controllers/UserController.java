@@ -9,18 +9,19 @@ import daos.UserDAO;
 import java.sql.Connection;
 import java.util.List;
 import models.User;
+import org.hibernate.SessionFactory;
 import tools.BCrypt;
 
 /**
  *
- * @author FES
+ * @author Panji Sadewo
  */
 public class UserController {
-    private Connection connection;
+    
     private UserDAO udao;
 
-    public UserController(Connection connection) {
-        udao = new UserDAO(connection);
+    public UserController(SessionFactory sessionFactory) {
+        udao = new UserDAO(sessionFactory);
     }
     
     public boolean login(String username, String password){
@@ -38,20 +39,9 @@ public class UserController {
         return result;
     }
     
-    
-//    public String insert(String id, String nama) {
-//        String result = "";
-//        if (rdao.save(new Region(Integer.parseInt(id), nama), true)){
-//            result = "Data berhasil disimpan";            
-//        }else{
-//            result = "Maaf data gagal disimpan";
-//        }
-//        return result;
-//    }
-    
     public String register(String username, String password){
         String result = "";
-        if (udao.save(new User(username, password), true)){
+        if (udao.saveOrDelete(new User(username, password), true)){
             result = "Registrasi Berhasil";            
         }else{
             result = "Maaf registrasi gagal";

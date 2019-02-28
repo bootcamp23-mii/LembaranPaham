@@ -11,88 +11,91 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import models.User;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import tools.BCrypt;
 
 /**
  *
- * @author FES
+ * @author Panji Sadewo
  */
 public class UserDAO {
-    private Connection connection;
-    public UserDAO(Connection connection) {
-        this.connection = connection;
-    }
+    private SessionFactory factory;
+    private Session session;
+    private Transaction transaction;
     
-    public List<User> login(User user){
-        List<User> listUser = new ArrayList<User>();
-        String query = "SELECT * FROM USERS WHERE USERNAME = ?";
+    public UserDAO(SessionFactory factory) {
+        this.factory = factory;
+    }
+
+    public UserDAO() {
+        
+    }    
+    
+    public boolean saveOrDelete(User user, boolean isSave) {
+        boolean result = false;
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, user.getUsername());
-//            preparedStatement.setString(2, user.getPassword());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                listUser.add(new User(resultSet.getString(1), resultSet.getString(2)));
+            if (isSave) {
+                session.saveOrUpdate(user);
+            } else {
+                session.delete(user);
             }
+            transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return listUser;
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }        
+        return true;
     }
     
-    public List<User> getData(Object keyword, boolean isGetById) {
-        List<User> listUser = new ArrayList<User>();
-        String query = "";
-        if (isGetById) {
-            query = "SELECT * FROM USERS WHERE USERNAME = '" + keyword+"' ORDER BY 1";
-        } else {
-            query = "SELECT * FROM USERS WHERE USERNAME like '%" + keyword +
-                    "%' or PASSWORD like '%" + keyword + "%'";
-        }
+    public List<User> getData(Object keyword, boolean isGetData) {
+        List<User> users = new ArrayList<User>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement prepareStatment = connection.prepareStatement(query);
-            ResultSet resultSet = prepareStatment.executeQuery();
-            while (resultSet.next()) {
-                listUser.add(new User(resultSet.getString(1), resultSet.getString(2)));
+            if (isGetData) {
+                users = session.createQuery("FROM Users where USERNAMEUSERNAME = "+keyword).list();
+            }else{
+                users = session.createQuery("SELECT * FROM USERS WHERE USERNAME like '%" + keyword +
+                    "%' or PASSWORD like '%" + keyword + "%'").list();
             }
+            
+            transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return listUser;
-    }
-    
-    
-    public boolean save(User u, boolean isInsert) {
-        boolean result = false;
-        String query = "";
-        if (isInsert) {
-            query = "INSERT INTO USERS (USERNAME,PASSWORD) VALUES ('"+u.getUsername()+
-                    "','"+ BCrypt.hashpw(u.getPassword(), BCrypt.gensalt())+"')";
-        } else {
-            query = "UPDATE USERS SET PASSWORD='"+BCrypt.hashpw(u.getPassword(), BCrypt.gensalt())+"' WHERE USERNAME='"+u.getUsername()+"'";
-        }
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.executeQuery();
-            result = true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return result;
-    }
-    
-    public boolean delete(String username){
-        boolean result = false;
-        String query = "DELETE FROM USERS WHERE USERNAME = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);            
-            preparedStatement.setString(1, username);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            result = true;
-        } catch (Exception e) {
-            e.getStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
         }
         
-        return result;
+        return users;
+    }
+    
+    public List<User> login(Object keyword) {
+        List<User> users = new ArrayList<User>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            users = session.createQuery("SELECT * FROM USERS WHERE USERNAME = "+keyword).list();
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        
+        return users;
     }
 }
