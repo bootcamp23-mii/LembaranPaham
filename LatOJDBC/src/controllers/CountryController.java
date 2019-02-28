@@ -6,8 +6,10 @@
 package controllers;
 
 import daos.CountryDAO;
+import java.math.BigDecimal;
 import java.util.List;
 import models.Country;
+import models.Region;
 import org.hibernate.SessionFactory;
 
 /**
@@ -24,7 +26,7 @@ public class CountryController {
     
     
      public String insert(String id, String name, String region){
-        if (cdao.saveOrDelete(new Country(id), true)) {
+        if (cdao.saveOrDelete(new Country(id,name,new Region(new BigDecimal(region))), true)) {
              return "Selamat Data Berhasil di Input";
         }
          return "Maaf Anda Gagal memasukkan data";
@@ -39,7 +41,7 @@ public class CountryController {
         
     }
     
-    public String update(String id, String name){
+    public String update(String id, String name, String region){
         if (cdao.saveOrDelete(new Country(id), true)) {
              return "Selamat Data Berhasil di Update";
         }
@@ -49,16 +51,16 @@ public class CountryController {
     }
     
     public List<Country> getAll(){
-        return cdao.getAll();
+        return cdao.search("", false);
         
     }
-    public List<Country> searchBy(Object key){
-        return cdao.searchBy(key);
+    public List<Country> getData(String key, boolean isById){
+        return cdao.search(key, isById);
         
     }
     
     public Country getById(Object key){
-        return cdao.getById(key);
+        return cdao.search(key, true).get(0);
         
     }
 }
