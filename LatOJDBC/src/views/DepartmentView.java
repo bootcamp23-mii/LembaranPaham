@@ -42,7 +42,7 @@ public class DepartmentView extends javax.swing.JPanel {
         initComponents();
         tableData(dc.getAll());
         setComboBox();
-        
+
     }
 
     private boolean konfirmasi() {
@@ -54,7 +54,7 @@ public class DepartmentView extends javax.swing.JPanel {
     }
 
     private boolean isEmpty() {
-         if (dc.getById(tfDeptId.getText()).equals("")) {
+        if (dc.getById(tfDeptId.getText()).equals("")) {
             return true;
         }
         return false;
@@ -350,7 +350,7 @@ public class DepartmentView extends javax.swing.JPanel {
             tfDeptId.setText(tampungan.getId() + "");
             tfDeptName.setText(tampungan.getName());
             cbManagerId.setSelectedItem(tampungan.getManager());
-            
+
             cbLocId.setSelectedItem(tampungan.getLocation());
         } else if (cari != "" && comboSearch.getSelectedItem() == "Search") {
             tableData(dc.seachBy(cari));
