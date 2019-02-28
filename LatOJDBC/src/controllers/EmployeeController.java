@@ -127,7 +127,7 @@ public class EmployeeController {
      * @return Menampilkan data pada tabel Employees sesuai ID yang dicari.
      */
     public Employee getById(String key){
-        return edao.Search(key,false).get(0);
+        return edao.Search(key,true).get(0);
     }
     
 }

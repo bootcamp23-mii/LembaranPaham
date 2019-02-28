@@ -490,11 +490,11 @@ public class EmployeeView extends javax.swing.JInternalFrame {
             if(data.getCommissionPct()!=null)tfEmployeeCommissionPct.setText(data.getCommissionPct()+"");
             else tfEmployeeCommissionPct.setText("0");
             for (int i = 0; i < cbEmployeeManagerId.getItemCount(); i++) {
-                if (cbEmployeeManagerId.getItemAt(i).split(" - ")[1].equals(data.getManager().getId()+""))
+                if (cbEmployeeManagerId.getItemAt(i).split(" - ")[0].equals(data.getManager().getId()+""))
                     cbEmployeeManagerId.setSelectedIndex(i);
             }
             for (int i = 0; i < cbEmployeeDepartmentId.getItemCount(); i++) {
-                if (cbEmployeeDepartmentId.getItemAt(i).split(" - ")[1].equals(data.getDepartment().getId()+""))
+                if (cbEmployeeDepartmentId.getItemAt(i).split(" - ")[0].equals(data.getDepartment().getId()+""))
                     cbEmployeeDepartmentId.setSelectedIndex(i);
             }
         }
