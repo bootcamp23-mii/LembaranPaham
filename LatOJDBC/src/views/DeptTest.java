@@ -14,25 +14,24 @@ import java.awt.Toolkit;
  */
 public class DeptTest extends javax.swing.JFrame {
 
-    private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+//    private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
     /**
      * Creates new form DeptTest
      */
     public DeptTest() {
         initComponents();
-        getMiddle();
+//        getMiddle();
         DepartmentView ev = new DepartmentView();
         jPanel1.add(ev);
         ev.setVisible(true);
-//        ev.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         ev.revalidate();
     }
-    
-    private void getMiddle() {
-        int frameWidth = ((dim.width - this.getSize().width) / 2);
-        int frameHeigth = ((dim.height - this.getSize().height) / 2);
-        this.setLocation(frameWidth, frameHeigth);
-    }
+//    
+//    private void getMiddle() {
+//        int frameWidth = ((dim.width - this.getSize().width) / 2);
+//        int frameHeigth = ((dim.height - this.getSize().height) / 2);
+//        this.setLocation(frameWidth, frameHeigth);
+//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

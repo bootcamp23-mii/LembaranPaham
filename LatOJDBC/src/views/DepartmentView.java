@@ -27,22 +27,24 @@ public class DepartmentView extends javax.swing.JPanel {
 
     DefaultTableModel myTable = new DefaultTableModel();
 //    DBConnection connection = new DBConnection();
-    List<models.Employee> employeeList = new ArrayList<>();
-    List<models.Location> locationList = new ArrayList<>();
+    private SessionFactory factory = HibernateUtil.getSessionFactory();
+    private DepartmentController dc = new DepartmentController(factory);
+    private EmployeeController ec = new EmployeeController(factory);
+    private LocationController lc = new LocationController(factory);
 
-    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    DepartmentController dc = new DepartmentController(sessionFactory);
-    EmployeeController ec = new EmployeeController(sessionFactory);
-    LocationController lc = new LocationController(sessionFactory);
+    private List<models.Department> departmentList = new ArrayList<>();
+    private List<models.Employee> employeeList = new ArrayList<>();
+    private List<models.Location> locationList = new ArrayList<>();
 
+    
+    private DefaultTableModel tableModel;
     /**
      * Creates new form DepartmentView3
      */
     public DepartmentView() {
         initComponents();
         tableData(dc.getAll());
-        setComboBox();
-        
+        setComboBox();        
     }
 
     private boolean konfirmasi() {
