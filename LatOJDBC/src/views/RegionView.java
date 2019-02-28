@@ -6,6 +6,7 @@
 package views;
 
 import controllers.RegionController;
+import daos.RegionDAO;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -13,7 +14,9 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Region;
-import tools.DBConnection;
+import org.hibernate.SessionFactory;
+import tools.HibernateUtil;
+//import tools.DBConnection;//
 
 /**
  *
@@ -21,15 +24,15 @@ import tools.DBConnection;
  */
 public class RegionView extends javax.swing.JInternalFrame {
 
-    List<Region> listdata = new ArrayList<Region>();
+    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    RegionDAO rdao = new RegionDAO(sessionFactory);
+    private DefaultTableModel model = new DefaultTableModel();
     int x = 0;
-    DefaultTableModel model = new DefaultTableModel();
-    DBConnection connection = new DBConnection();
-    RegionController rc = new RegionController(connection.getConnection());
+    RegionController rc = new RegionController(sessionFactory);
 
     public RegionView() {
         initComponents();
-        TampilData(rc.getAllData());
+        TampilData(rc.selectAll());
     }
 
     private void TampilData(List<Region> listdata) {
@@ -86,78 +89,55 @@ public class RegionView extends javax.swing.JInternalFrame {
 
         pnMain = new javax.swing.JPanel();
         pnTop = new javax.swing.JPanel();
-        lblIdl = new javax.swing.JLabel();
-        tfId = new javax.swing.JTextField();
-        lblNama = new javax.swing.JLabel();
-        tfNama = new javax.swing.JTextField();
-        pnButton = new javax.swing.JPanel();
-        btClear = new javax.swing.JButton();
-        btInsert = new javax.swing.JButton();
-        btDelete = new javax.swing.JButton();
-        pnTableRegion = new javax.swing.JPanel();
-        scpTabelRegion = new javax.swing.JScrollPane();
-        tbRegion = new javax.swing.JTable();
-        pnSearch = new javax.swing.JPanel();
-        lblSearch = new javax.swing.JLabel();
         tfSearch = new javax.swing.JTextField();
         chbById = new javax.swing.JCheckBox();
         btSearch = new javax.swing.JButton();
+        pnButton = new javax.swing.JPanel();
+        pnTableRegion = new javax.swing.JPanel();
+        scpTabelRegion = new javax.swing.JScrollPane();
+        tbRegion = new javax.swing.JTable();
+        btClear = new javax.swing.JButton();
+        pnSearch = new javax.swing.JPanel();
+        lblIdl = new javax.swing.JLabel();
+        lblNama = new javax.swing.JLabel();
+        tfId = new javax.swing.JTextField();
+        tfNama = new javax.swing.JTextField();
+        lblSearch = new javax.swing.JLabel();
+        btInsert = new javax.swing.JButton();
+        btDelete = new javax.swing.JButton();
 
         setClosable(true);
 
         pnTop.setLayout(new java.awt.GridLayout(2, 2, 0, 5));
 
-        lblIdl.setText("Id");
-        pnTop.add(lblIdl);
-        pnTop.add(tfId);
+        tfSearch.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        pnTop.add(tfSearch);
 
-        lblNama.setText("Nama");
-        pnTop.add(lblNama);
-        pnTop.add(tfNama);
-
-        btClear.setText("Clear");
-        btClear.addActionListener(new java.awt.event.ActionListener() {
+        chbById.setText("by Id");
+        chbById.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btClearActionPerformed(evt);
+                chbByIdActionPerformed(evt);
             }
         });
+        pnTop.add(chbById);
 
-        btInsert.setText("Save");
-        btInsert.addActionListener(new java.awt.event.ActionListener() {
+        btSearch.setText("search");
+        btSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btInsertActionPerformed(evt);
+                btSearchActionPerformed(evt);
             }
         });
-
-        btDelete.setText("Delete");
-        btDelete.setEnabled(false);
-        btDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btDeleteActionPerformed(evt);
-            }
-        });
+        pnTop.add(btSearch);
 
         javax.swing.GroupLayout pnButtonLayout = new javax.swing.GroupLayout(pnButton);
         pnButton.setLayout(pnButtonLayout);
         pnButtonLayout.setHorizontalGroup(
             pnButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnButtonLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btClear)
-                .addGap(18, 18, 18)
-                .addComponent(btInsert)
-                .addGap(28, 28, 28)
-                .addComponent(btDelete)
-                .addGap(33, 33, 33))
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         pnButtonLayout.setVerticalGroup(
             pnButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnButtonLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addGroup(pnButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btInsert)
-                    .addComponent(btClear)
-                    .addComponent(btDelete)))
+            .addGap(0, 34, Short.MAX_VALUE)
         );
 
         tbRegion.setModel(new javax.swing.table.DefaultTableModel(
@@ -178,91 +158,140 @@ public class RegionView extends javax.swing.JInternalFrame {
         });
         scpTabelRegion.setViewportView(tbRegion);
 
+        btClear.setText("Clear");
+        btClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btClearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnTableRegionLayout = new javax.swing.GroupLayout(pnTableRegion);
         pnTableRegion.setLayout(pnTableRegionLayout);
         pnTableRegionLayout.setHorizontalGroup(
             pnTableRegionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTableRegionLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(scpTabelRegion, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addGroup(pnTableRegionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnTableRegionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scpTabelRegion, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btClear))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
         pnTableRegionLayout.setVerticalGroup(
             pnTableRegionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnTableRegionLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTableRegionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btClear)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addComponent(scpTabelRegion, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 27, Short.MAX_VALUE))
+                .addGap(29, 29, 29))
         );
 
         pnSearch.setLayout(new javax.swing.BoxLayout(pnSearch, javax.swing.BoxLayout.LINE_AXIS));
 
+        lblIdl.setText("Id");
+
+        lblNama.setText("Nama");
+
         lblSearch.setText("Search");
-        pnSearch.add(lblSearch);
-        pnSearch.add(tfSearch);
 
-        chbById.setText("by Id");
-        chbById.addActionListener(new java.awt.event.ActionListener() {
+        btInsert.setText("Save");
+        btInsert.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chbByIdActionPerformed(evt);
+                btInsertActionPerformed(evt);
             }
         });
-        pnSearch.add(chbById);
 
-        btSearch.setText("search");
-        btSearch.addActionListener(new java.awt.event.ActionListener() {
+        btDelete.setText("Delete");
+        btDelete.setEnabled(false);
+        btDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSearchActionPerformed(evt);
+                btDeleteActionPerformed(evt);
             }
         });
-        pnSearch.add(btSearch);
 
         javax.swing.GroupLayout pnMainLayout = new javax.swing.GroupLayout(pnMain);
         pnMain.setLayout(pnMainLayout);
         pnMainLayout.setHorizontalGroup(
             pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pnMainLayout.createSequentialGroup()
-                .addComponent(pnTop, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMainLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(pnTableRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblIdl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblNama, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tfNama)
+                    .addComponent(tfId)
+                    .addGroup(pnMainLayout.createSequentialGroup()
+                        .addComponent(btInsert)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                        .addComponent(btDelete)))
+                .addGap(38, 38, 38)
+                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnMainLayout.createSequentialGroup()
+                        .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(pnMainLayout.createSequentialGroup()
+                        .addComponent(pnTop, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pnButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(pnMainLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnTableRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(pnMainLayout.createSequentialGroup()
-                    .addComponent(pnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         pnMainLayout.setVerticalGroup(
             pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnMainLayout.createSequentialGroup()
-                .addComponent(pnTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGap(22, 22, 22)
+                .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(pnMainLayout.createSequentialGroup()
+                        .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pnTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnMainLayout.createSequentialGroup()
+                                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblIdl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(14, 14, 14)
+                        .addComponent(pnButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btInsert)
+                        .addComponent(btDelete)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnTableRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMainLayout.createSequentialGroup()
-                    .addContainerGap(111, Short.MAX_VALUE)
+                    .addContainerGap(195, Short.MAX_VALUE)
                     .addComponent(pnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(153, Short.MAX_VALUE)))
+                    .addContainerGap(236, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnMain, javax.swing.GroupLayout.PREFERRED_SIZE, 613, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(22, Short.MAX_VALUE)
+                .addComponent(pnMain, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -271,7 +300,7 @@ public class RegionView extends javax.swing.JInternalFrame {
 
     private void btClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btClearActionPerformed
         clearing();
-        TampilData(rc.getAllData());
+        TampilData(rc.selectAll());
     }//GEN-LAST:event_btClearActionPerformed
 
     private void btInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btInsertActionPerformed
@@ -285,13 +314,13 @@ public class RegionView extends javax.swing.JInternalFrame {
                     );
                     if (reply == JOptionPane.YES_OPTION) {
                         JOptionPane.showMessageDialog(null, rc.update(tfId.getText(), tfNama.getText()));
-                        TampilData(rc.getAllData());
+                        TampilData(rc.selectAll());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            TampilData(rc.getAllData());
+            TampilData(rc.selectAll());
         }
     }//GEN-LAST:event_btInsertActionPerformed
 
@@ -299,7 +328,7 @@ public class RegionView extends javax.swing.JInternalFrame {
         int confirm = JOptionPane.showConfirmDialog(null, "Anda Yakin?", "", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             rc.delete(tfId.getText().toString());
-            TampilData(rc.getAllData());
+            TampilData(rc.selectAll());
         }
     }//GEN-LAST:event_btDeleteActionPerformed
 
@@ -322,12 +351,16 @@ public class RegionView extends javax.swing.JInternalFrame {
         String key = tfSearch.getText().toString();
         boolean cb = chbById.isSelected();
         if (!cb) {
-
-            TampilData(rc.searchBy(key));
+            TampilData(rc.search(key));
         } else {
             Region tampungan = rc.getById(key);
             tfId.setText(tampungan.getId() + "");
             tfNama.setText(tampungan.getName());
+            Object[] data = {1, tampungan.getId(), tampungan.getName()};
+            Object[] columnNames = {"No", "Id", "Nama"};
+            model = new DefaultTableModel(null, columnNames);
+            tbRegion.setModel(model);
+            model.addRow(data);
         }
         btDelete.setEnabled(true);
         tfId.setEnabled(false);

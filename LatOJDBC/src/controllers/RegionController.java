@@ -5,61 +5,56 @@
  */
 package controllers;
 
-import daos.RegionDAO;
-import java.util.List;
-import java.sql.Connection;
-import java.util.ArrayList;
 import models.Region;
+import daos.RegionDAO;
+import java.math.BigDecimal;
+import java.util.List;
+import org.hibernate.SessionFactory;
 
 /**
  *
- * @author AdhityaWP
+ * @author Panji Sadewo
  */
 public class RegionController {
+    
     private RegionDAO rdao;
-    public RegionController(Connection connection) {
-        rdao = new RegionDAO(connection);
+
+    public RegionController(SessionFactory sessionFactory) {
+        rdao = new RegionDAO(sessionFactory);
     }
     
-    public String insert(String id, String nama) {
-        String result = "";
-        if (rdao.save(new Region(Integer.parseInt(id), nama), true)){
-            result = "Data berhasil disimpan";            
-        }else{
-            result = "Maaf data gagal disimpan";
+    
+    public String insert(String id, String name){
+        if (rdao.saveOrDelete(new Region(new BigDecimal(id), name), true)) {
+            return "Selamat insert berhasil";
         }
-        return result;
+        return "Maaf coba lagi";
     }
     
-    public String update(String id, String nama) {
-        String result = "";
-        if (rdao.save(new Region(Integer.parseInt(id), nama), false)){
-            result = "Data berhasil diubah";            
-        }else{
-            result = "Maaf data gagal diubah";
+    public String delete(String id){
+         if (rdao.saveOrDelete(new Region(new BigDecimal(id)), false)) {
+            return "Selamat update berhasil";
         }
-        return result;
+        return "Maaf coba lagi";        
     }
     
-    public String delete(String id) {
-        String result = "";
-        if (rdao.delete((Integer.parseInt(id)))){
-            result = "Data berhasil dihapus";            
-        }else{
-            result = "Maaf data gagal dihapus";
+    public String update(String id, String name){
+        if (rdao.saveOrDelete(new Region(new BigDecimal(id), name), true)) {
+            return "Selamat update berhasil";
         }
-        return result;
+        return "Maaf coba lagi";
     }
     
-    public Region getById(String key){
-        return rdao.getData(key, true).get(0);        
+    public List<Region> selectAll(){
+        return rdao.getData("");
     }
     
-    public List<Region> searchBy(String key){
-        return rdao.getData(key, false);  
+    public List<Region> search(String id){
+        return rdao.getData(id);
     }
     
-    public List<Region> getAllData(){
-        return rdao.getData("", false);        
+    public Region getById(String id){
+        return rdao.getById(new Integer(id));
     }
+    
 }
