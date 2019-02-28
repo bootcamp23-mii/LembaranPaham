@@ -42,7 +42,7 @@ public class DepartmentView extends javax.swing.JPanel {
         initComponents();
         tableData(dc.getAll());
         setComboBox();
-
+        
     }
 
     private boolean konfirmasi() {
@@ -54,7 +54,7 @@ public class DepartmentView extends javax.swing.JPanel {
     }
 
     private boolean isEmpty() {
-        if (dc.getById(tfDeptId.getText()).equals("")) {
+         if (dc.getById(tfDeptId.getText()).equals("")) {
             return true;
         }
         return false;
@@ -301,14 +301,14 @@ public class DepartmentView extends javax.swing.JPanel {
         // TODO add your handling code here:
         if (isEmpty()) {
             JOptionPane.showMessageDialog(null, dc.insert(tfDeptId.getText(), tfDeptName.getText(),
-                    cbManagerId.getSelectedItem().toString().split(" - ")[0], new Short(cbLocId.getSelectedItem().toString().split(" - ")[0])));
-        } else {
+cbManagerId.getSelectedItem().toString().split(" - ")[0], cbLocId.getSelectedItem().toString().split(" - ")[0]));
+     } else {
             try {
                 int reply = JOptionPane.showConfirmDialog(null, "Anda yakin untuk melakukan perubahan data?",
                         "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (reply == JOptionPane.YES_OPTION) {
                     JOptionPane.showMessageDialog(null, dc.update(tfDeptId.getText(), tfDeptName.getText(),
-                            cbManagerId.getSelectedItem().toString().split(" - ")[0], new Short(cbLocId.getSelectedItem().toString().split(" - ")[0])));
+                            cbManagerId.getSelectedItem().toString().split(" - ")[0], cbLocId.getSelectedItem().toString().split(" - ")[0]));
 
                     clean();
                     tableData(dc.getAll());
@@ -350,7 +350,7 @@ public class DepartmentView extends javax.swing.JPanel {
             tfDeptId.setText(tampungan.getId() + "");
             tfDeptName.setText(tampungan.getName());
             cbManagerId.setSelectedItem(tampungan.getManager());
-
+            
             cbLocId.setSelectedItem(tampungan.getLocation());
         } else if (cari != "" && comboSearch.getSelectedItem() == "Search") {
             tableData(dc.seachBy(cari));

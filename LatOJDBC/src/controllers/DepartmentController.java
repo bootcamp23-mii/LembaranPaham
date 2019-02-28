@@ -30,7 +30,7 @@ public class DepartmentController {
         else return "FAIL TO INSERT RECORD";
     }
     
-    public String update(String id, String name, String manager, Short location){
+    public String update(String id, String name, String manager, String location){
         if (ddao.saveordelete(new Department(new Short(id), name, new Employee(new Integer(manager)), new Location(Short.valueOf(location))), true)) return "Insert berhasil.";
         else return "UPDATE FAILED";
     }
