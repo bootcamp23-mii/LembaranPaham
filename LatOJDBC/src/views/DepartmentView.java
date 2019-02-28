@@ -69,8 +69,12 @@ public class DepartmentView extends javax.swing.JPanel {
             data[i][0] = (i + 1);
             data[i][1] = dept.get(i).getId();
             data[i][2] = dept.get(i).getName();
-            data[i][3] = dept.get(i).getManager().getId();
-            data[i][4] = dept.get(i).getLocation().getId();
+            if (dept.get(i).getManager()!=null)data[i][3] = dept.get(i).getManager().getId()+"";
+            else data[i][3] = "";
+            if (dept.get(i).getLocation()!=null)data[i][4] = dept.get(i).getLocation().getId()+"";
+            else data[i][4] = "";
+//            data[i][3] = dept.get(i).getManager().getId();
+//            data[i][4] = dept.get(i).getLocation();
         }
         myTable = new DefaultTableModel(data, columnNames);
         tbDepartment.setModel(myTable);
@@ -93,12 +97,24 @@ public class DepartmentView extends javax.swing.JPanel {
     }
 
     private void setComboBox() {
-        for (models.Employee employee : ec.getAll()) {
-            cbManagerId.addItem(employee.getEmployeeList() + " - " + employee.getLastName());
+//        for (models.Employee employee : ec.getAll()) {
+//            cbManagerId.addItem(employee.getEmployeeList()+ " - " + employee.getLastName());
+//        }
+
+        for (models.Department department : departmentList) {
+            for (Employee employee : department.getEmployeeList()) {
+                cbManagerId.addItem(employee.getId()+ " - " + employee.getLastName());
+            }
         }
+        
+        for (Department department : departmentList) {
+            if (!locationList.contains(department.getLocation()))locationList.add(new models.Location(department.getLocation().getId(),department.getLocation().getCity()));
+        }
+        
         for (models.Location location : lc.getAll()) {
             cbLocId.addItem(location.getId() + " - " + location.getStreetAddress());
         }
+
     }
 
     /**
