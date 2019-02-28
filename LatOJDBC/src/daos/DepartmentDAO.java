@@ -32,7 +32,6 @@ public class DepartmentDAO {
     public DepartmentDAO() {
     }
 
-    
     public List<Department> getAll(Object keyword) {
         List<Department> department = new ArrayList<>();
         session = this.factory.openSession();
@@ -45,20 +44,21 @@ public class DepartmentDAO {
                 transaction.rollback();
             }
         }
-
         return department;
     }
-    
-    public Department getId(Object keyword){
+
+    public Department getId(Object keyword) {
         Department department = new Department();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            department = (Department) session.createQuery("from Department where id = "+keyword+" order by 1").list().get(0);
+            department = (Department) session.createQuery("from Department where id = " + keyword + " order by 1").list().get(0);
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            if (transaction!=null) transaction.rollback();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         } finally {
             session.close();
         }
@@ -87,5 +87,4 @@ public class DepartmentDAO {
         }
         return result;
     }
-
 }

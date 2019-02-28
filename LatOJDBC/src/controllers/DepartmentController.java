@@ -25,13 +25,13 @@ public class DepartmentController {
     }
 
 
-    public String insert(String id, String name, String manager, Short location){
-        if (ddao.saveordelete(new Department(new Short(id), name, new Employee(new Integer(manager)), new Location(location)), true)) return "Insert berhasil.";
+    public String insert(String id, String name, String manager, String location){
+        if (ddao.saveordelete(new Department(new Short(id), name, new Employee(new Integer(manager)), new Location(Short.valueOf(location))), true)) return "Insert berhasil.";
         else return "FAIL TO INSERT RECORD";
     }
     
-    public String update(String id, String name, String manager, Short location){
-        if (ddao.saveordelete(new Department(new Short(id), name, new Employee(new Integer(manager)), new Location(location)), true)) return "Insert berhasil.";
+    public String update(String id, String name, String manager, String location){
+        if (ddao.saveordelete(new Department(new Short(id), name, new Employee(new Integer(manager)), new Location(Short.valueOf(location))), true)) return "Insert berhasil.";
         else return "UPDATE FAILED";
     }
     

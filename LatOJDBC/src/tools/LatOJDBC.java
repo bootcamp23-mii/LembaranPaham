@@ -53,11 +53,12 @@ public class LatOJDBC {
         
         
         
-        System.out.println(dc.getAll());
-        for (Department department : dc.getAll()) {
-            System.out.println(department.getName());
-            
-        }
+//        System.out.println(dc.getAll());
+//        for (Department department : dc.getAll()) {
+//            System.out.println(department.getName());
+//            
+//        }
+        System.out.println(dc.insert("11", "sasa", "100", "1000"));
         
 //        
 //        System.out.println(dc.getById("10").getName());

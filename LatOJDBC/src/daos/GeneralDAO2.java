@@ -18,24 +18,28 @@ import org.hibernate.Transaction;
  *
  * @author Pandu
  */
-public class GeneralDAO2<T> {
+public class GeneralDAO2<T> implements DAOInterface<T>{
 
     private SessionFactory factory;
     private Session session;
     private Transaction transaction;
     private T t;
 
-    public GeneralDAO2(SessionFactory factory) {
+//    public GeneralDAO2(SessionFactory factory) {
+//        this.factory = factory;
+//        
+//    }
+    public GeneralDAO2(SessionFactory factory, T t) {
         this.factory = factory;
+        this.t = t;
     }
 
     public GeneralDAO2() {
 
     }
 
-    private String getQuery( String keyword) {
-        String query = "From " + this.t;
-        System.out.println(query);
+    private String getQuery(String keyword) {
+        String query = "From " + t.getClass().getSimpleName();
         if (!keyword.equals("")) {
             query += " where ";
             for (Field field : t.getClass().getDeclaredFields()) {
@@ -48,14 +52,13 @@ public class GeneralDAO2<T> {
         return query + " order by 1";
     }
 
-    public List<T> getData(String keyword) {
+    @Override
+    public List<T> getData(Object keyword) {
         List<T> obj = new ArrayList<>();
-        System.out.println(obj.getClass().getTypeName());
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            obj = session.createQuery(getQuery(keyword)).list();
-                getQuery(keyword);
+            obj = session.createQuery(getQuery(keyword + "")).list();
         } catch (Exception e) {
             e.printStackTrace();
             if (transaction != null) {
@@ -65,12 +68,13 @@ public class GeneralDAO2<T> {
         return obj;
     }
 
-    public Object getById(Object ent, Object id) {
-        Object obj = new Object();
+    @Override
+    public T getById(Object id) {
+        T obj=null;
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            obj = session.createQuery("FROM " + ent.getClass().getSimpleName() + " WHERE id = '" + id + "'").uniqueResult();
+            obj = (T) session.createQuery("FROM " + t.getClass().getSimpleName() + " WHERE id = '" + id + "'").uniqueResult();
         } catch (Exception e) {
             e.printStackTrace();
             if (transaction != null) {
@@ -80,15 +84,16 @@ public class GeneralDAO2<T> {
         return obj;
     }
 
-    public boolean saveordelete(Object ent, Boolean isSave) {
+    @Override
+    public boolean saveOrDelete(T entity, boolean isSave) {
         boolean result = false;
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
             if (isSave) {
-                session.saveOrUpdate(ent);
+                session.saveOrUpdate(entity);
             } else {
-                session.delete(ent);
+                session.delete(entity);
             }
             transaction.commit();
             result = true;
