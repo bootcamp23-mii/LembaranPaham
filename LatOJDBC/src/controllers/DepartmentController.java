@@ -11,6 +11,7 @@ import java.util.List;
 import models.Department;
 import models.Employee;
 import models.Location;
+import org.hibernate.SessionFactory;
 
 /**
  *
@@ -21,8 +22,8 @@ public class DepartmentController {
     private DepartmentDAO ddao;
     private Connection connection;
 
-    public DepartmentController(Connection connection) {
-        ddao = new DepartmentDAO(connection);
+    public DepartmentController(SessionFactory sessionFactory) {
+        ddao = new DepartmentDAO(sessionFactory);
     }
 
 

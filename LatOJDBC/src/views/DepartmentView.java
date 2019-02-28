@@ -15,7 +15,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Department;
 import models.Employee;
-import tools.DBConnection;
+import org.hibernate.SessionFactory;
+//import tools.DBConnection;
 
 /**
  *
@@ -24,13 +25,14 @@ import tools.DBConnection;
 public class DepartmentView extends javax.swing.JPanel {
 
     DefaultTableModel myTable = new DefaultTableModel();
-    DBConnection connection = new DBConnection();
+//    DBConnection connection = new DBConnection();
     List<models.Employee> employeeList = new ArrayList<>();
     List<models.Location> locationList = new ArrayList<>();
 
-    DepartmentController dc = new DepartmentController(connection.getConnection());
-    EmployeeController ec = new EmployeeController(connection.getConnection());
-    LocationController lc = new LocationController(connection.getConnection());
+    private SessionFactory sessionFactory;
+    DepartmentController dc = new DepartmentController(sessionFactory);
+    EmployeeController ec = new EmployeeController(sessionFactory);
+    LocationController lc = new LocationController(sessionFactory);
 
     /**
      * Creates new form DepartmentView3
@@ -64,8 +66,8 @@ public class DepartmentView extends javax.swing.JPanel {
             data[i][0] = (i + 1);
             data[i][1] = dept.get(i).getId();
             data[i][2] = dept.get(i).getName();
-            data[i][3] = dept.get(i).getManager_id();
-            data[i][4] = dept.get(i).getLocation_id();
+            data[i][3] = dept.get(i).getManager();
+            data[i][4] = dept.get(i).getLocation();
         }
         myTable = new DefaultTableModel(data, columnNames);
         tbDepartment.setModel(myTable);
@@ -88,11 +90,11 @@ public class DepartmentView extends javax.swing.JPanel {
     }
 
     private void setComboBox() {
-        for (models.Employee employee : ec.getAllData()) {
-            cbManagerId.addItem(employee.getEmployeeId() + " - " + employee.getLast_name());
+        for (models.Employee employee : ec.getAll()) {
+            cbManagerId.addItem(employee.getEmployeeList() + " - " + employee.getLastName());
         }
-        for (models.Location location : lc.getAll("")) {
-            cbLocId.addItem(location.getId() + " - " + location.getAddress());
+        for (models.Location location : lc.getAll()) {
+            cbLocId.addItem(location.getId() + " - " + location.getStreetAddress());
         }
     }
 
@@ -298,14 +300,14 @@ public class DepartmentView extends javax.swing.JPanel {
         // TODO add your handling code here:
         if (isEmpty()) {
             JOptionPane.showMessageDialog(null, dc.insert(tfDeptId.getText(), tfDeptName.getText(),
-                    cbManagerId.getSelectedItem().toString().split(" - ")[0], cbLocId.getSelectedItem().toString().split(" - ")[0]));
+                    cbManagerId.getSelectedItem().toString().split(" - ")[0], new Short(cbLocId.getSelectedItem().toString().split(" - ")[0])));
         } else {
             try {
                 int reply = JOptionPane.showConfirmDialog(null, "Anda yakin untuk melakukan perubahan data?",
                         "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (reply == JOptionPane.YES_OPTION) {
                     JOptionPane.showMessageDialog(null, dc.update(tfDeptId.getText(), tfDeptName.getText(),
-                            cbManagerId.getSelectedItem().toString().split(" - ")[0], cbLocId.getSelectedItem().toString().split(" - ")[0]));
+                            cbManagerId.getSelectedItem().toString().split(" - ")[0], new Short(cbLocId.getSelectedItem().toString().split(" - ")[0])));
 
                     clean();
                     tableData(dc.getAll());
@@ -346,9 +348,9 @@ public class DepartmentView extends javax.swing.JPanel {
             Department tampungan = dc.getById(cari);
             tfDeptId.setText(tampungan.getId() + "");
             tfDeptName.setText(tampungan.getName());
-            cbManagerId.setSelectedItem(tampungan.getManager_id());
+            cbManagerId.setSelectedItem(tampungan.getManager());
             
-            cbLocId.setSelectedItem(tampungan.getLocation_id());
+            cbLocId.setSelectedItem(tampungan.getLocation());
         } else if (cari != "" && comboSearch.getSelectedItem() == "Search") {
             tableData(dc.seachBy(cari));
         } else {

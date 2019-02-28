@@ -7,7 +7,7 @@ package views;
 
 import controllers.EmployeeController;
 import models.Employee;
-import tools.DBConnection;
+//import tools.DBConnection;
 import controllers.JobController;
 import controllers.UserController;
 import daos.JobDAO;
@@ -15,6 +15,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +35,7 @@ public class HRView extends javax.swing.JFrame {
 
     SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-//    UserController uc = new UserController(sessionFactory);
+    UserController uc = new UserController((Connection) sessionFactory);
     
 
     /**

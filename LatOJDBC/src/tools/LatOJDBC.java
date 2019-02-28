@@ -1,10 +1,13 @@
+package tools;
 
+import controllers.DepartmentController;
 import controllers.EmployeeController;
 import controllers.UserController;
 import daos.CountryDAO;
 import daos.DepartmentDAO;
 import daos.RegionDAO;
 import models.Country;
+import models.Department;
 import models.Region;
 import org.hibernate.SessionFactory;
 import tools.HibernateUtil;
@@ -44,12 +47,22 @@ public class LatOJDBC {
 //        System.out.println(ec.delete("210"));
 //        System.out.println(uc.login("admin", "admin"));
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+
+        DepartmentDAO ddao = new DepartmentDAO(sessionFactory);
+        DepartmentController dc = new DepartmentController(sessionFactory);
         
-        System.out.println(sessionFactory);
+        
+        
+//        System.out.println(dc.getAll());
+        for (Department department : ddao.getAll("")) {
+            System.out.println(department.getName());
+            
+        }
+//        System.out.println(sessionFactory);
 //        CountryDAO cdao= new CountryDAO(sessionFactory);
 //        for (Country country : cdao.getAll()) {
 //            System.out.println(country.getName());
 //        }
-        
+
     }
 }

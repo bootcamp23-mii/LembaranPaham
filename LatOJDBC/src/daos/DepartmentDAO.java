@@ -25,10 +25,14 @@ public class DepartmentDAO {
     private Session session;
     private Transaction transaction;
 
-    public DepartmentDAO(Connection connection) {
-        this.connection = connection;
+    public DepartmentDAO(SessionFactory factory) {
+        this.factory = factory;
     }
 
+    public DepartmentDAO() {
+    }
+
+    
     public List<Department> getAll(Object keyword) {
         List<Department> department = new ArrayList<>();
         session = this.factory.openSession();
