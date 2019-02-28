@@ -53,11 +53,14 @@ public class LatOJDBC {
         
         
         
-//        System.out.println(dc.getAll());
-        for (Department department : ddao.getAll("")) {
+        System.out.println(dc.getAll());
+        for (Department department : dc.getAll()) {
             System.out.println(department.getName());
             
         }
+        
+//        
+//        System.out.println(dc.getById("10").getName());
 //        System.out.println(sessionFactory);
 //        CountryDAO cdao= new CountryDAO(sessionFactory);
 //        for (Country country : cdao.getAll()) {

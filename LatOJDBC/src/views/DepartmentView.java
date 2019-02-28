@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import models.Department;
 import models.Employee;
 import org.hibernate.SessionFactory;
+import tools.HibernateUtil;
 //import tools.DBConnection;
 
 /**
@@ -29,7 +30,7 @@ public class DepartmentView extends javax.swing.JPanel {
     List<models.Employee> employeeList = new ArrayList<>();
     List<models.Location> locationList = new ArrayList<>();
 
-    private SessionFactory sessionFactory;
+    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     DepartmentController dc = new DepartmentController(sessionFactory);
     EmployeeController ec = new EmployeeController(sessionFactory);
     LocationController lc = new LocationController(sessionFactory);
@@ -367,7 +368,6 @@ public class DepartmentView extends javax.swing.JPanel {
         // TODO add your handling code here:
         setVisible(false);
     }//GEN-LAST:event_btCloseActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btClear;

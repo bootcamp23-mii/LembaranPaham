@@ -6,7 +6,6 @@
 package controllers;
 
 import daos.DepartmentDAO;
-import java.sql.Connection;
 import java.util.List;
 import models.Department;
 import models.Employee;
@@ -20,7 +19,6 @@ import org.hibernate.SessionFactory;
 public class DepartmentController {
 
     private DepartmentDAO ddao;
-    private Connection connection;
 
     public DepartmentController(SessionFactory sessionFactory) {
         ddao = new DepartmentDAO(sessionFactory);
@@ -43,7 +41,7 @@ public class DepartmentController {
     }
     
     public Department getById(String key) {
-        return ddao.getId(key);
+        return ddao.getId(new Integer(key));
     }
 
     public List<Department> seachBy(String key) {

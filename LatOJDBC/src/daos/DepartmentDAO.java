@@ -38,7 +38,7 @@ public class DepartmentDAO {
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            department = session.createQuery("FROM Region").list();
+            department = session.createQuery("FROM Department").list();
         } catch (Exception e) {
             e.printStackTrace();
             if (transaction != null) {
@@ -54,7 +54,7 @@ public class DepartmentDAO {
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            department = (Department) session.createQuery("from department where id = "+keyword+" order by 1").list().get(0);
+            department = (Department) session.createQuery("from Department where id = "+keyword+" order by 1").list().get(0);
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
