@@ -40,7 +40,7 @@ public class CountryController {
     }
     
     public String update(String id, String name){
-        if (cdao.saveOrDelete(new Country(new String(id),name), true)) {
+        if (cdao.saveOrDelete(new Country(id), true)) {
              return "Selamat Data Berhasil di Update";
         }
          return "Maaf Anda Gagal melakukan update";

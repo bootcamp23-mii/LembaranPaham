@@ -54,9 +54,14 @@ public class Country implements Serializable {
         this.id = countryId;
     }
 
-    public Country(String string, String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Country(String id, String name, List<Location> locationList, Region region) {
+        this.id = id;
+        this.name = name;
+        this.locationList = locationList;
+        this.region = region;
     }
+
+    
 
     public String getId() {
         return id;
