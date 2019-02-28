@@ -66,12 +66,12 @@ public class LocationDAO {
         return locations;
     }
 
-    public List<Location> searchBy(String key) {
+    public List<Location> searchBy(Object key) {
         List<Location> locations = new ArrayList<Location>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            locations = session.createQuery("FROM Location WHERE id LIKE '%" + key 
+            locations = session.createQuery("FROM Location WHERE id LIKE '%" + key
                     + "%' OR STREET_ADDRESS LIKE '%" + key + "%' OR POSTAL_CODE LIKE '%"+key+"%' OR CITY LIKE '%"+key
                     + "%' OR STATE_PROVINCE LIKE '%" + key + "%' ORDER BY 1").list();
             transaction.commit();
@@ -86,7 +86,7 @@ public class LocationDAO {
         return locations;
     }
     
-    public List<Location> getData(String key) {
+    public List<Location> getData(Object key) {
         List<Location> locations = new ArrayList<Location>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
