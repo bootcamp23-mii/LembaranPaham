@@ -350,6 +350,7 @@ public class HRView extends javax.swing.JFrame {
     private void regionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regionMenuItemActionPerformed
         // TODO add your handling code here:
         RegionView rv = new RegionView();
+        rv.setSize(400, 400);
         jPanelMain.add(rv);
         rv.setVisible(true);
     }//GEN-LAST:event_regionMenuItemActionPerformed
@@ -370,6 +371,8 @@ public class HRView extends javax.swing.JFrame {
     private void deptMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deptMenuItemActionPerformed
         DepartmentView dv = new DepartmentView();
         jPanelMain.add(dv);
+        dv.setBounds(0, 0, 0, 0);
+        dv.setSize(400, 400);
         dv.setVisible(true);
     }//GEN-LAST:event_deptMenuItemActionPerformed
 

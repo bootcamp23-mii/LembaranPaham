@@ -56,7 +56,7 @@ public class RegionView extends javax.swing.JInternalFrame {
     }
 
     private boolean isEmpty() {
-        if (rc.getById(tfId.getText()).equals("")) {
+        if (rc.search(tfId.getText()).isEmpty()) {
             return true;
         }
         return false;
@@ -107,6 +107,10 @@ public class RegionView extends javax.swing.JInternalFrame {
         btDelete = new javax.swing.JButton();
 
         setClosable(true);
+        setNormalBounds(new java.awt.Rectangle(0, 0, 50, 50));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        pnMain.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         pnTop.setLayout(new java.awt.GridLayout(2, 2, 0, 5));
 
@@ -129,6 +133,8 @@ public class RegionView extends javax.swing.JInternalFrame {
         });
         pnTop.add(btSearch);
 
+        pnMain.add(pnTop, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 51, 277, -1));
+
         javax.swing.GroupLayout pnButtonLayout = new javax.swing.GroupLayout(pnButton);
         pnButton.setLayout(pnButtonLayout);
         pnButtonLayout.setHorizontalGroup(
@@ -139,6 +145,8 @@ public class RegionView extends javax.swing.JInternalFrame {
             pnButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 34, Short.MAX_VALUE)
         );
+
+        pnMain.add(pnButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(593, 116, 38, -1));
 
         tbRegion.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -186,13 +194,21 @@ public class RegionView extends javax.swing.JInternalFrame {
                 .addGap(29, 29, 29))
         );
 
+        pnMain.add(pnTableRegion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 156, -1, -1));
+
         pnSearch.setLayout(new javax.swing.BoxLayout(pnSearch, javax.swing.BoxLayout.LINE_AXIS));
+        pnMain.add(pnSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 631, -1));
 
         lblIdl.setText("Id");
+        pnMain.add(lblIdl, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 51, 70, 20));
 
         lblNama.setText("Nama");
+        pnMain.add(lblNama, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 82, 70, 20));
+        pnMain.add(tfId, new org.netbeans.lib.awtextra.AbsoluteConstraints(129, 51, 143, -1));
+        pnMain.add(tfNama, new org.netbeans.lib.awtextra.AbsoluteConstraints(129, 82, 143, -1));
 
         lblSearch.setText("Search");
+        pnMain.add(lblSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 22, 138, 23));
 
         btInsert.setText("Save");
         btInsert.addActionListener(new java.awt.event.ActionListener() {
@@ -200,6 +216,7 @@ public class RegionView extends javax.swing.JInternalFrame {
                 btInsertActionPerformed(evt);
             }
         });
+        pnMain.add(btInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(129, 127, -1, -1));
 
         btDelete.setText("Delete");
         btDelete.setEnabled(false);
@@ -208,92 +225,9 @@ public class RegionView extends javax.swing.JInternalFrame {
                 btDeleteActionPerformed(evt);
             }
         });
+        pnMain.add(btDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(209, 127, -1, -1));
 
-        javax.swing.GroupLayout pnMainLayout = new javax.swing.GroupLayout(pnMain);
-        pnMain.setLayout(pnMainLayout);
-        pnMainLayout.setHorizontalGroup(
-            pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnMainLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblIdl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblNama, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE))
-                .addGap(34, 34, 34)
-                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfNama)
-                    .addComponent(tfId)
-                    .addGroup(pnMainLayout.createSequentialGroup()
-                        .addComponent(btInsert)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                        .addComponent(btDelete)))
-                .addGap(38, 38, 38)
-                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnMainLayout.createSequentialGroup()
-                        .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(pnMainLayout.createSequentialGroup()
-                        .addComponent(pnTop, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(pnMainLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnTableRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnMainLayout.createSequentialGroup()
-                    .addComponent(pnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
-                    .addContainerGap()))
-        );
-        pnMainLayout.setVerticalGroup(
-            pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnMainLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnMainLayout.createSequentialGroup()
-                        .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnMainLayout.createSequentialGroup()
-                                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblIdl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(14, 14, 14)
-                        .addComponent(pnButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btInsert)
-                        .addComponent(btDelete)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnTableRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMainLayout.createSequentialGroup()
-                    .addContainerGap(195, Short.MAX_VALUE)
-                    .addComponent(pnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(236, Short.MAX_VALUE)))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(pnMain, javax.swing.GroupLayout.PREFERRED_SIZE, 613, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
-                .addComponent(pnMain, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        getContentPane().add(pnMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 26, 613, 361));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

@@ -315,7 +315,7 @@ public class CountryView extends javax.swing.JInternalFrame {
     }
     
     private boolean isEmpty() {
-        if (cc.getById(tfCountryId.getText()).equals("")) {
+        if (cc.getData(tfCountryId.getText(),chbCekById.isSelected()).isEmpty()) {
             return true;
         }
         return false;
@@ -328,7 +328,7 @@ public class CountryView extends javax.swing.JInternalFrame {
             data[i][0] = (i + 1);
             data[i][1] = country.get(i).getId();
             data[i][2] = country.get(i).getName();
-            data[i][3] = country.get(i).getRegion();
+            data[i][3] = country.get(i).getRegion().getId();
         }
         tableCountry = new DefaultTableModel(data, columnNames);
         tbCountries.setModel(tableCountry);
@@ -404,7 +404,7 @@ public class CountryView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btClearActionPerformed
 
     private void btSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchActionPerformed
-        showAllCountryTable(cc.getData(title, isIcon));
+        showAllCountryTable(cc.getData(tfSearch.getText(), chbCekById.isSelected()));
     }//GEN-LAST:event_btSearchActionPerformed
 
     private void chbCekByIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbCekByIdActionPerformed
@@ -423,7 +423,8 @@ public class CountryView extends javax.swing.JInternalFrame {
             data[i][0] = (i + 1);
             data[i][1] = country.get(i).getId();
             data[i][2] = country.get(i).getName();
-            data[i][3] = country.get(i).getRegion();
+//            data[i][3] = country.get(i).getRegion();
+            data[i][3] = country.get(i).getRegion().getId()+"";
 
         }
         myTableModel = new DefaultTableModel(data, columnNames);

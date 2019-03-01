@@ -220,9 +220,7 @@
             </Component>
             <Container class="javax.swing.JPanel" name="pnEmployeeMainCenterContent1">
 
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout">
-                <Property name="alignment" type="int" value="0"/>
-              </Layout>
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btEmployeeInsert">
                   <Properties>
@@ -255,12 +253,8 @@
             </Container>
             <Container class="javax.swing.JPanel" name="pnEmployeeMainCenterContent3">
 
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout">
-                <Property name="alignment" type="int" value="0"/>
-              </Layout>
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JSeparator" name="spcEmployees2">
-                </Component>
                 <Component class="javax.swing.JButton" name="btEmployeeSearch">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Search"/>
@@ -277,8 +271,6 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chbEmployeeisGetByIdActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JSeparator" name="spcEmployees3">
-                </Component>
                 <Component class="javax.swing.JButton" name="btEmployeeClear">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Clear"/>
@@ -286,6 +278,10 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEmployeeClearActionPerformed"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JSeparator" name="spcEmployees2">
+                </Component>
+                <Component class="javax.swing.JSeparator" name="spcEmployees3">
                 </Component>
               </SubComponents>
             </Container>

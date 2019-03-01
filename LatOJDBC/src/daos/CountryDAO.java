@@ -62,7 +62,7 @@ public class CountryDAO {
         transaction = session.beginTransaction();
         try {
             if (isById) {
-                listCountry = session.createQuery("FROM Country WHERE id = " + key + " order by 1").list();
+                listCountry = session.createQuery("FROM Country WHERE id = '" + key + "' order by 1").list();
             } else {
                 listCountry = session.createQuery("FROM Country WHERE id like '%"
                         + key + "%' or name like '%" + key + "%' or region like '%" + key + "%' order by 1").list();

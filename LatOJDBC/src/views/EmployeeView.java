@@ -187,11 +187,11 @@ public class EmployeeView extends javax.swing.JInternalFrame {
         pnEmployeeMainCenterContent2 = new javax.swing.JPanel();
         tfEmployeeSearch = new javax.swing.JTextField();
         pnEmployeeMainCenterContent3 = new javax.swing.JPanel();
-        spcEmployees2 = new javax.swing.JSeparator();
         btEmployeeSearch = new javax.swing.JButton();
         chbEmployeeisGetById = new javax.swing.JCheckBox();
-        spcEmployees3 = new javax.swing.JSeparator();
         btEmployeeClear = new javax.swing.JButton();
+        spcEmployees2 = new javax.swing.JSeparator();
+        spcEmployees3 = new javax.swing.JSeparator();
         pnEmployeeMainSouth = new javax.swing.JPanel();
         scpEmployee = new javax.swing.JScrollPane();
         tbEmployee = new javax.swing.JTable();
@@ -302,7 +302,7 @@ public class EmployeeView extends javax.swing.JInternalFrame {
         });
         pnEmployeeMainCenter.add(cbEmployeeDepartmentId);
 
-        pnEmployeeMainCenterContent1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        pnEmployeeMainCenterContent1.setLayout(new javax.swing.BoxLayout(pnEmployeeMainCenterContent1, javax.swing.BoxLayout.LINE_AXIS));
 
         btEmployeeInsert.setText("Save");
         btEmployeeInsert.addActionListener(new java.awt.event.ActionListener() {
@@ -327,8 +327,7 @@ public class EmployeeView extends javax.swing.JInternalFrame {
 
         pnEmployeeMainCenter.add(pnEmployeeMainCenterContent2);
 
-        pnEmployeeMainCenterContent3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-        pnEmployeeMainCenterContent3.add(spcEmployees2);
+        pnEmployeeMainCenterContent3.setLayout(new javax.swing.BoxLayout(pnEmployeeMainCenterContent3, javax.swing.BoxLayout.LINE_AXIS));
 
         btEmployeeSearch.setText("Search");
         btEmployeeSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -345,7 +344,6 @@ public class EmployeeView extends javax.swing.JInternalFrame {
             }
         });
         pnEmployeeMainCenterContent3.add(chbEmployeeisGetById);
-        pnEmployeeMainCenterContent3.add(spcEmployees3);
 
         btEmployeeClear.setText("Clear");
         btEmployeeClear.addActionListener(new java.awt.event.ActionListener() {
@@ -354,6 +352,8 @@ public class EmployeeView extends javax.swing.JInternalFrame {
             }
         });
         pnEmployeeMainCenterContent3.add(btEmployeeClear);
+        pnEmployeeMainCenterContent3.add(spcEmployees2);
+        pnEmployeeMainCenterContent3.add(spcEmployees3);
 
         pnEmployeeMainCenter.add(pnEmployeeMainCenterContent3);
 
@@ -398,7 +398,7 @@ public class EmployeeView extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnEmployeeMain, javax.swing.GroupLayout.PREFERRED_SIZE, 670, Short.MAX_VALUE)
+            .addComponent(pnEmployeeMain, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
         );
 
         pack();

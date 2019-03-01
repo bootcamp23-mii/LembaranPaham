@@ -44,6 +44,7 @@ public class DepartmentView extends javax.swing.JPanel {
     public DepartmentView() {
         initComponents();
         tableData(dc.getAll());
+        this.setBounds(0, 0, 0, 0);
         setComboBox();        
     }
 
@@ -145,18 +146,12 @@ public class DepartmentView extends javax.swing.JPanel {
         cbManagerId = new javax.swing.JComboBox<>();
         cbLocId = new javax.swing.JComboBox<>();
 
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         lblDeptName.setText("Department Name");
-        add(lblDeptName, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 97, -1, -1));
 
         lblDept.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lblDept.setText("Department");
-        add(lblDept, new org.netbeans.lib.awtextra.AbsoluteConstraints(292, 9, -1, -1));
 
         lblManagerId.setText("Manager Id");
-        add(lblManagerId, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 135, -1, -1));
-        add(tfSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(509, 56, 134, -1));
 
         btDelete.setText("Delete");
         btDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -164,12 +159,8 @@ public class DepartmentView extends javax.swing.JPanel {
                 btDeleteActionPerformed(evt);
             }
         });
-        add(btDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(337, 201, 101, -1));
 
         lblLocationId.setText("Location Id");
-        add(lblLocationId, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 168, -1, -1));
-        add(tfDeptId, new org.netbeans.lib.awtextra.AbsoluteConstraints(228, 56, 210, -1));
-        add(tfDeptName, new org.netbeans.lib.awtextra.AbsoluteConstraints(228, 93, 210, -1));
 
         btSave.setText("Save");
         btSave.addActionListener(new java.awt.event.ActionListener() {
@@ -177,7 +168,6 @@ public class DepartmentView extends javax.swing.JPanel {
                 btSaveActionPerformed(evt);
             }
         });
-        add(btSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(228, 201, 97, -1));
 
         tbDepartment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -197,21 +187,16 @@ public class DepartmentView extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tbDepartment);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 246, 631, 179));
-
         comboSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Search", "Search By Id", "Show All" }));
         comboSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboSearchActionPerformed(evt);
             }
         });
-        add(comboSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(509, 92, 134, -1));
 
         lblDeptId.setText("Deprartment id");
-        add(lblDeptId, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 60, -1, -1));
 
         jLabel5.setText("Search");
-        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(456, 60, -1, -1));
 
         btClear.setText("Clear");
         btClear.addActionListener(new java.awt.event.ActionListener() {
@@ -219,7 +204,6 @@ public class DepartmentView extends javax.swing.JPanel {
                 btClearActionPerformed(evt);
             }
         });
-        add(btClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(509, 130, 134, -1));
 
         btClose.setText("X");
         btClose.addActionListener(new java.awt.event.ActionListener() {
@@ -227,13 +211,102 @@ public class DepartmentView extends javax.swing.JPanel {
                 btCloseActionPerformed(evt);
             }
         });
-        add(btClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(599, 6, -1, -1));
 
         cbManagerId.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
-        add(cbManagerId, new org.netbeans.lib.awtextra.AbsoluteConstraints(228, 130, 210, -1));
 
         cbLocId.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
-        add(cbLocId, new org.netbeans.lib.awtextra.AbsoluteConstraints(228, 168, 210, -1));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(292, 292, 292)
+                .addComponent(lblDept)
+                .addGap(215, 215, 215)
+                .addComponent(btClose))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(lblDeptId)
+                .addGap(150, 150, 150)
+                .addComponent(tfDeptId, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel5)
+                .addGap(20, 20, 20)
+                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(lblDeptName)
+                .addGap(135, 135, 135)
+                .addComponent(tfDeptName, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(71, 71, 71)
+                .addComponent(comboSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(lblManagerId)
+                .addGap(167, 167, 167)
+                .addComponent(cbManagerId, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(71, 71, 71)
+                .addComponent(btClear, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(lblLocationId)
+                .addGap(169, 169, 169)
+                .addComponent(cbLocId, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(228, 228, 228)
+                .addComponent(btSave, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(btDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblDept))
+                    .addComponent(btClose))
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tfDeptId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblDeptId)
+                            .addComponent(jLabel5))))
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(lblDeptName))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(tfDeptName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(lblManagerId))
+                    .addComponent(cbManagerId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btClear))
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblLocationId)
+                    .addComponent(cbLocId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btSave)
+                    .addComponent(btDelete))
+                .addGap(22, 22, 22)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDeleteActionPerformed
