@@ -45,7 +45,7 @@ public class CountryView extends javax.swing.JInternalFrame {
     }
     
     void tampilRegion() {
-        for (Region region : rc.getAllData()) {
+        for (Region region : rc.selectAll()) {
             cbRegionId.addItem(region.getId()+" - "+region.getName());
         }
     }
@@ -314,8 +314,11 @@ public class CountryView extends javax.swing.JInternalFrame {
         return true;
     }
     
-    private List<Country> isEmpty() {
-        return cc.getData(title, isIcon);
+    private boolean isEmpty() {
+        if (cc.getById(tfCountryId.getText()).equals("")) {
+            return true;
+        }
+        return false;
     }
     
     private void showAllCountryTable(List<Country> country){
