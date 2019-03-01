@@ -101,7 +101,7 @@ public class DepartmentView extends javax.swing.JPanel {
 //            cbManagerId.addItem(employee.getEmployeeList()+ " - " + employee.getLastName());
 //        }
 
-        for (models.Department department : departmentList) {
+        for (models.Department department : dc.getAll()) {
             for (Employee employee : department.getEmployeeList()) {
                 cbManagerId.addItem(employee.getId()+ " - " + employee.getLastName());
             }
