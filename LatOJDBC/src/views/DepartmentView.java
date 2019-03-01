@@ -111,7 +111,7 @@ public class DepartmentView extends javax.swing.JPanel {
             if (!locationList.contains(department.getLocation()))locationList.add(new models.Location(department.getLocation().getId(),department.getLocation().getCity()));
         }
         
-        for (models.Location location : lc.getAll()) {
+        for (models.Location location : lc.getData()) {
             cbLocId.addItem(location.getId() + " - " + location.getStreetAddress());
         }
 
