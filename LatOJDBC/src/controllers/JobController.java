@@ -6,105 +6,54 @@
 package controllers;
 
 import daos.JobDAO;
-import java.sql.Connection;
+import java.math.BigDecimal;
 import java.util.List;
 import models.Job;
+import org.hibernate.SessionFactory;
 
 /**
  *
- * @author Lusiana
+ * @author acer
  */
 public class JobController {
 
-    private JobDAO rdao;
+     private JobDAO jdao;
 
-    public JobController(Connection connection) {
-        rdao = new JobDAO(connection);
-    }
-
-    /**
-     * Controller insert data
-     *
-     * @param id berisi job id
-     * @param name = job title
-     * @param min_salary = minimum salary
-     * @param max_salary = maximum salary
-     * @return String
-     */
-    public String insert(String id, String name, String min_salary, String max_salary) {
-        String result = "";
-        if (rdao.save(new Job(id, name, Integer.parseInt(min_salary), Integer.parseInt(max_salary)), true)) {
-            result = "Data berhasil disimpan";
-        } else {
-            result = "Maaf, data gagal disimpan";
-        }
-        return result;
-    }
-
-    /**
-     * Controller update data
-     *
-     * @param id berisi job id
-     * @param name = job title
-     * @param min_salary = minimum salary
-     * @param max_salary = maximum salary
-     * @return String
-     */
-    public String update(String id, String name, String min_salary, String max_salary) {
-        String result = "";
-        if (rdao.save(new Job(id, name, Integer.parseInt(min_salary), Integer.parseInt(max_salary)), false)) {
-            result = "Data berhasil disimpan";
-        } else {
-            result = "Maaf, data gagal disimpan";
-        }
-        return result;
-    }
-
-    /**
-     * Controller delete data
-     *
-     * @param id merupakan job id yang akan dihapus datanya
-     * @return
-     */
-    public String delete(String id) {
-        String result = "";
-        if (rdao.delete(id)) {
-            result = "Selamat data berhasil dihapus";
-        } else {
-            result = "Maaf, data gagal dihapus";
-        }
-        return result;
-    }
-
-    /**
-     * controller untuk menampilkan data berdasarkan id
-     *
-     * @param key id yang ingin dilihat detail datanya
-     * @return List
-     */
-    public List<Job> getById(String key) {
-        List result;
-        result = rdao.getData(key, true);
-        return result;
-    }
-
-    /**
-     * Controller untuk menampilkan semua data atau data yang mengandung
-     * karakter tertentu
-     *
-     * @param key karakter atau kata kunci yang ingin dicari datanya
-     * @return List
-     */
-    public List<Job> searchBy(String key) {
-        List result;
-        result = rdao.getData(key, false);
-        return result;
+    public JobController(SessionFactory sessionFactory) {
+        jdao = new JobDAO(sessionFactory);
     }
     
-    public List<Job> getAll() {
-        List result;
-        result = rdao.getData("", false);
-        return result;
+    public String insert(String id, String title, String minSalary, String maxSalary){
+        if (jdao.saveOrDelete (new Job(id,title, Integer.parseInt(minSalary), Integer.parseInt(maxSalary)),true)) {
+             return " Selamat data berhasil disimpan";
+        }
+         return "Maaf coba lagi";
     }
-
+    
+    public String delete(String id, String title, String minSalary, String maxSalary){
+         if (jdao.saveOrDelete(new Job(id,title, Integer.parseInt(minSalary), Integer.parseInt(maxSalary)), false)) {
+            return "Selamat berhasil dihapus";
+        }
+        return "Maaf coba lagi";        
+    }
+    
+    public String update(String id, String title, String minSalary, String maxSalary){
+        if (jdao.saveOrDelete(new Job(id, title, Integer.parseInt(minSalary), Integer.parseInt(maxSalary)),true)) {
+            return "Selamat data berhasil disimpan";
+        }
+        return "Maaf coba lagi";
+    }
+    
+    public List<Job> selectAll(){
+        return jdao.getData("");
+    }
+    
+    public List<Job> search(String id){
+        return jdao.getData(id);
+    }
+    
+    public Job getById(String id){
+        return jdao.getById(id);
+    }
+    
 }

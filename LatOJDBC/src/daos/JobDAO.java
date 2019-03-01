@@ -11,7 +11,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import models.Job;
-import tools.DBConnection;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
 
 /**
  *
@@ -19,91 +22,76 @@ import tools.DBConnection;
  */
 public class JobDAO {
 
-    private Connection connection;
-
-    public JobDAO(Connection connection) {
-        this.connection = connection;
+   private SessionFactory factory;
+    private Session session;
+    private Transaction transaction;
+    
+    public JobDAO(SessionFactory factory) {
+        this.factory = factory;
     }
 
-    /**
-     * DAO untuk menampilkan data
-     *
-     * @param keyword kata kunci untuk pencarian data, bisa dikosongkan apabila
-     * ingin menampilkan keseluruhan data
-     * @param isGetById menentukan jenis getData true = by id, false = search by
-     * key atau getAll
-     * @return List
-     */
-    public List<Job> getData(Object keyword, boolean isGetById) {
-        List<Job> listJob = new ArrayList<Job>();
-        String query = "";
-        if (isGetById) {
-            query = "SELECT * FROM JOBS WHERE job_id like'%" + keyword + "%'";
-        } else {
-            query = "SELECT * FROM JOBS WHERE job_id like'%" + keyword + "%' or job_title like'%" + keyword + "%' "
-                    + "or min_salary like'%" + keyword + "%'or max_salary like'%" + keyword + "%'";
-        }
+    public JobDAO() {
+        
+    }
+    
+    public List<Job> getData(Object keyword) {
+        List<Job> jobs = new ArrayList<Job>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                listJob.add(new Job(resultSet.getString(1), resultSet.getString(2), resultSet.getInt(3), resultSet.getInt(4)));
+            jobs = session.createQuery("FROM Job where title like '%"+keyword+"%' or id like '%"+keyword+"%' order by 1").list();
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
             }
-        } catch (Exception e) {
-            e.getStackTrace();
+        } finally {
+            session.close();
         }
-        return listJob;
+        
+        return jobs;
     }
-
-    /**
-     * Fungsi ini digunakan untuk melakukan insert atau update data. Apabila
-     * parameter isInsert = true, maka fungsi ini akan melakukan insert data,
-     * apabila false, maka update data
-     *
-     * @param r
-     * @param isInsert
-     * @return
-     */
-    public boolean save(Job r, boolean isInsert) {
+    
+    
+    public boolean saveOrDelete(Job job, boolean isSave) {
         boolean result = false;
-        String query = "";
-        if (isInsert) {
-            query = "INSERT INTO jobs(job_title, min_salary, max_salary, job_id) VALUES(?,?,?,?)";
-        } else {
-            query = "UPDATE Jobs SET job_title = ?, min_salary = ?, max_salary=? WHERE job_id=? ";
-        }
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-            preparedStatement.setString(1, r.getName());
-            preparedStatement.setInt(2, r.getMin_salary());
-            preparedStatement.setInt(3, r.getMax_salary());
-            preparedStatement.setString(4, r.getId());
-            preparedStatement.executeQuery();
+            if (isSave) {
+                session.saveOrUpdate(job);
+            } else {
+                session.delete(job);
+            }
+            transaction.commit();
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return result;
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }        
+        return true;
     }
-
-    /**
-     * fungsi untuk melakukan delete data
-     *
-     * @param id id yang akan dihapus datanya
-     * @return
-     */
-    public boolean delete(String id) {
-        boolean result = false;
-        String query = "DELETE FROM JOBS WHERE JOB_ID ='" + id + "'";
+    
+    public Job getById(String id) {
+        Job r = new Job();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.executeQuery();
-            result = true;
+            r = (Job) session.createQuery("FROM Job where id = '"+id+"'").list().get(0);
+            transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
         }
-        return result;
+        return r;
     }
-
 }

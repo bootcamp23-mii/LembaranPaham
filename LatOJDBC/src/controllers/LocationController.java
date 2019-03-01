@@ -46,7 +46,7 @@ public class LocationController {
         }
     }
         
-    public List<Location> getAll(){   
+    public List<Location> getData(){   
         return ldao.getData("");
     }
     

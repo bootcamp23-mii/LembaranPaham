@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import models.Country;
 import models.Region;
 import org.hibernate.SessionFactory;
+import tools.HibernateUtil;
 
 
 /**
@@ -25,10 +26,12 @@ import org.hibernate.SessionFactory;
  * @author gerydanu
  */
 public class CountryView extends javax.swing.JInternalFrame {
-    private SessionFactory sessionFactory;
-    CountryController cc = new CountryController(sessionFactory);
-    RegionController rc = new RegionController((Connection) sessionFactory);
-    
+    private SessionFactory factory=HibernateUtil.getSessionFactory();
+    private CountryController cc = new CountryController(factory);
+    private RegionController rc = new RegionController(factory);
+    DefaultTableModel myTableModel = new DefaultTableModel();
+    private List<models.Country> countryList= new ArrayList<>();
+    private List<models.Region> regionlList= new ArrayList<>();
     
     DefaultTableModel tableCountry;
    
@@ -37,12 +40,12 @@ public class CountryView extends javax.swing.JInternalFrame {
      */
     public CountryView() {
         initComponents();
-        tampilTabelCountries();
+        tableData(cc.getAll());
         tampilRegion();
     }
     
     void tampilRegion() {
-        for (Region region : rc.getAllData()) {
+        for (Region region : rc.selectAll()) {
             cbRegionId.addItem(region.getId()+" - "+region.getName());
         }
     }
@@ -152,7 +155,18 @@ public class CountryView extends javax.swing.JInternalFrame {
             }
         });
 
+        tfSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfSearchActionPerformed(evt);
+            }
+        });
+
         chbCekById.setText("Get by ID");
+        chbCekById.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chbCekByIdActionPerformed(evt);
+            }
+        });
 
         btSearch.setText("Search");
         btSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -300,8 +314,11 @@ public class CountryView extends javax.swing.JInternalFrame {
         return true;
     }
     
-    private List<Country> isEmpty() {
-        return cc.searchBy(title);
+    private boolean isEmpty() {
+        if (cc.getById(tfCountryId.getText()).equals("")) {
+            return true;
+        }
+        return false;
     }
     
     private void showAllCountryTable(List<Country> country){
@@ -331,13 +348,13 @@ public class CountryView extends javax.swing.JInternalFrame {
                     );
                     if (reply == JOptionPane.YES_OPTION) {
                         JOptionPane.showMessageDialog(null, cc.update(tfCountryId.getText(), tfCountryName.getText(), cbRegionId.getSelectedItem().toString().split(" - ")[0]));
-                        showAllCountryTable(cc.getAllData());
+                        showAllCountryTable(cc.getAll());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            showAllCountryTable(cc.getAllData());
+            showAllCountryTable(cc.getAll());
         }
     }//GEN-LAST:event_btSaveActionPerformed
 
@@ -352,13 +369,14 @@ public class CountryView extends javax.swing.JInternalFrame {
                 if (reply == JOptionPane.YES_OPTION) {
                     JOptionPane.showMessageDialog(null, cc.delete(tfSearch.getText()));
                     tfSearch.setText("");
-                    showAllCountryTable(cc.getAllData());
+                    showAllCountryTable(cc.getAll());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        tampilTabelCountries();
+//        tampilTabelCountries();
+        tableData(countryList);
     }//GEN-LAST:event_btDeleteActionPerformed
 
     private void scpTabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scpTabelMouseClicked
@@ -386,20 +404,30 @@ public class CountryView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btClearActionPerformed
 
     private void btSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchActionPerformed
-        showAllCountryTable(cc.searchBy(title));
+        showAllCountryTable(cc.getData(title, isIcon));
     }//GEN-LAST:event_btSearchActionPerformed
-    
-    
-    private void tampilTabelCountries() {
-        DefaultTableModel tabelCountries = (DefaultTableModel) tbCountries.getModel();
-        tabelCountries.setRowCount(0);
-        int hitung = 1;
-        for (models.Country values : cc.getById(title)) {
-            Object[] data = {hitung, values.getCountry_id(), values.getCountry_name(), values.getRegion_id()};
-            tabelCountries.addRow(data);
-            hitung++;
-        }
 
+    private void chbCekByIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbCekByIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chbCekByIdActionPerformed
+
+    private void tfSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfSearchActionPerformed
+    
+    
+    private void tableData(List<models.Country> country) {
+        Object[] columnNames = {"Nomor", "Country", "Name", "Region"};
+        Object[][] data = new Object[country.size()][columnNames.length];
+        for (int i = 0; i < data.length; i++) {
+            data[i][0] = (i + 1);
+            data[i][1] = country.get(i).getId();
+            data[i][2] = country.get(i).getName();
+            data[i][3] = country.get(i).getRegion();
+
+        }
+        myTableModel = new DefaultTableModel(data, columnNames);
+        tbCountries.setModel(myTableModel);
         
     }
 

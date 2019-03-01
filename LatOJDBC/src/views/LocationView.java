@@ -5,6 +5,7 @@
  */
 package views;
 
+import controllers.CountryController;
 import controllers.LocationController;
 import daos.LocationDAO;
 import java.awt.event.KeyEvent;
@@ -12,27 +13,32 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import models.Country;
 import models.Location;
 import org.hibernate.SessionFactory;
+import tools.HibernateUtil;
 
 /**
  *
  * @author AdhityaWP
  */
 public class LocationView extends javax.swing.JPanel {
-    List<Location> listdata = new ArrayList<Location>();
-    private SessionFactory sessionFactory;
+
+    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     private DefaultTableModel modelLocation = new DefaultTableModel();
+    private List<Country> countryList = new ArrayList<>();
     int x = 0;
     LocationDAO ldao = new LocationDAO(sessionFactory);
     LocationController lc = new LocationController(sessionFactory);
+    CountryController cc = new CountryController(sessionFactory);
 
     /**
      * Creates new form LocationView
      */
     public LocationView() {
         initComponents();
-        tableData(lc.getAll());
+        tableData(lc.getData());
+        setComboBox();
     }
 
     private boolean confirm() {
@@ -40,7 +46,7 @@ public class LocationView extends javax.swing.JPanel {
                 || tfStreet.getText().equals("")
                 || tfPostal.getText().equals("")
                 || tfCity.getText().equals("")
-                || TfState.getText().equals("")) {
+                || tfState.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Data cannot be empty !");
             return false;
         }
@@ -48,25 +54,47 @@ public class LocationView extends javax.swing.JPanel {
     }
 
     private boolean isEmpty() {
-        if (lc.getAll().isEmpty()) {
+        if (lc.getData().isEmpty()) {
             return true;
         }
         return false;
     }
 
-    private void tableData(List<models.Location> locs) {
+    private void setComboBox() {
+        for (Country data : cc.getAll()) {
+            cbCountry.addItem(data.getId() + " - " + data.getName());
+        }
+    }
 
+    private void tableData(List<Location> locs) {
         Object[] columnNames = {"NO", "ID", "Street Address", "Postal Code", "City", "State province", "Country"};
         Object[][] data = new Object[locs.size()][columnNames.length];
 
         for (int i = 0; i < data.length; i++) {
             data[i][0] = (i + 1);
             data[i][1] = locs.get(i).getId();
-            data[i][2] = locs.get(i).getStreetAddress();
-            data[i][3] = locs.get(i).getPostalCode();
-            data[i][4] = locs.get(i).getCity();
-            data[i][5] = locs.get(i).getStateProvince();
-            data[i][6] = locs.get(i).getCountry().getName();
+            if (locs.get(i).getStreetAddress()!= null) {
+                data[i][2] = locs.get(i).getStreetAddress();
+            } else {
+                data[i][2] = "";
+            }
+            if (locs.get(i).getPostalCode() != null) {
+                data[i][3] = locs.get(i).getPostalCode();
+            } else {
+                data[i][3] = "";
+            }
+            if (locs.get(i).getCity() != null) {
+                data[i][4] = locs.get(i).getCity();
+            } else {
+                data[i][4] = "";
+            }
+            if (locs.get(i).getStateProvince() != null) {
+                data[i][5] = locs.get(i).getStateProvince();
+            } else {
+                data[i][5] = "";
+            }
+            data[i][6] = locs.get(i).getCountry().getId();
+
         }
         modelLocation = new DefaultTableModel(data, columnNames);
         tbLocation.setModel(modelLocation);
@@ -74,11 +102,12 @@ public class LocationView extends javax.swing.JPanel {
 
     private void clean() {
         tfId.setEnabled(true);
+        tfId.setText("");
         tfStreet.setText("");
         tfPostal.setText("");
         tfCity.setText("");
-        TfState.setText("");
-        cbCountry.setSelectedIndex(1);
+        tfState.setText("");
+        cbCountry.setSelectedIndex(0);
     }
 
     void filterhuruf(KeyEvent a) {
@@ -107,7 +136,7 @@ public class LocationView extends javax.swing.JPanel {
         tfId = new javax.swing.JTextField();
         tfPostal = new javax.swing.JTextField();
         tfStreet = new javax.swing.JTextField();
-        TfState = new javax.swing.JTextField();
+        tfState = new javax.swing.JTextField();
         tfCity = new javax.swing.JTextField();
         btSave = new javax.swing.JButton();
         btDelete = new javax.swing.JButton();
@@ -117,11 +146,15 @@ public class LocationView extends javax.swing.JPanel {
         btReset = new javax.swing.JButton();
         cbCountry = new javax.swing.JComboBox<>();
         cbSearch = new javax.swing.JComboBox<>();
+        tfSearch = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         jfLocation.setClosable(true);
+        jfLocation.setTitle("Location CRUD");
         jfLocation.setVisible(true);
 
-        lblId.setText("Location ID");
+        lblId.setText("ID");
 
         lblStreet.setText("Street Address");
 
@@ -141,6 +174,7 @@ public class LocationView extends javax.swing.JPanel {
         });
 
         btDelete.setText("DELETE");
+        btDelete.setEnabled(false);
         btDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btDeleteActionPerformed(evt);
@@ -179,7 +213,12 @@ public class LocationView extends javax.swing.JPanel {
             }
         });
 
-        cbCountry.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AR", "AU", "BE", "BR", "CA", "CH", "CN", "DE", "DK", "EG", "FR", "IL", "IN", "IT", "JP", "KW", "ML", "MX", "NG", "NL", "SG", "UK", "US", "ZM", "ZW" }));
+        cbCountry.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {""}));
+        cbCountry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCountryActionPerformed(evt);
+            }
+        });
 
         cbSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SEARCH", "BY ID", " " }));
         cbSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -188,103 +227,111 @@ public class LocationView extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setText("Search:");
+
         javax.swing.GroupLayout jfLocationLayout = new javax.swing.GroupLayout(jfLocation.getContentPane());
         jfLocation.getContentPane().setLayout(jfLocationLayout);
         jfLocationLayout.setHorizontalGroup(
             jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jfLocationLayout.createSequentialGroup()
-                .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(spTabelLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jfLocationLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
                         .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jfLocationLayout.createSequentialGroup()
-                                .addGap(24, 24, 24)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblPostal)
+                                .addComponent(lblStreet)
                                 .addComponent(lblId)
-                                .addGap(41, 41, 41))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jfLocationLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblPostal)
-                                    .addComponent(lblStreet, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(18, 18, 18)))
-                        .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tfPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tfStreet, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel1))
+                            .addComponent(cbSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tfPostal, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                            .addComponent(tfId, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                            .addComponent(tfStreet, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                            .addComponent(btSearch)
+                            .addComponent(tfSearch))
                         .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jfLocationLayout.createSequentialGroup()
-                                .addGap(64, 64, 64)
-                                .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jfLocationLayout.createSequentialGroup()
+                                        .addGap(26, 26, 26)
+                                        .addComponent(btReset, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(54, 54, 54))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jfLocationLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(lblCity)
                                             .addComponent(lblCountry)
-                                            .addComponent(btDelete))
-                                        .addGap(24, 24, 24))
-                                    .addGroup(jfLocationLayout.createSequentialGroup()
-                                        .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(cbSearch, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lblState))
+                                            .addComponent(lblState)
+                                            .addComponent(lblCity))
                                         .addGap(18, 18, 18)))
                                 .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(tfCity, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                                    .addComponent(TfState, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                                    .addComponent(cbCountry, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(tfCity, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfState, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbCountry, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(4, 4, 4))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jfLocationLayout.createSequentialGroup()
-                                .addGap(218, 218, 218)
-                                .addComponent(btSearch))))
-                    .addComponent(btReset, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btSave, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(24, 24, 24)
+                                .addComponent(btDelete))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jfLocationLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(spTabelLoc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jfLocationLayout.createSequentialGroup()
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(4, 4, 4)))))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
         jfLocationLayout.setVerticalGroup(
             jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jfLocationLayout.createSequentialGroup()
-                .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(32, 32, 32)
+                .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jfLocationLayout.createSequentialGroup()
+                            .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblId)
+                                .addComponent(lblCity))
+                            .addGap(28, 28, 28)
+                            .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tfStreet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblStreet)))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jfLocationLayout.createSequentialGroup()
+                            .addGap(100, 100, 100)
+                            .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tfPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblPostal))))
                     .addGroup(jfLocationLayout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jfLocationLayout.createSequentialGroup()
-                                    .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblId))
-                                    .addGap(28, 28, 28)
-                                    .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(tfStreet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblStreet)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jfLocationLayout.createSequentialGroup()
-                                    .addGap(100, 100, 100)
-                                    .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(tfPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblPostal))))
+                        .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfCity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jfLocationLayout.createSequentialGroup()
-                                .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(tfCity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblCity))
-                                    .addGroup(jfLocationLayout.createSequentialGroup()
-                                        .addGap(52, 52, 52)
-                                        .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(TfState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(lblState))))
-                                .addGap(28, 28, 28)
-                                .addComponent(cbCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jfLocationLayout.createSequentialGroup()
-                        .addGap(136, 136, 136)
-                        .addComponent(lblCountry)))
-                .addGap(38, 38, 38)
+                                .addGap(52, 52, 52)
+                                .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblState))))
+                        .addGap(28, 28, 28)
+                        .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cbCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCountry))))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
                 .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btReset)
-                    .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
                 .addGroup(jfLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btSave)
+                    .addComponent(btSearch)
                     .addComponent(btDelete)
-                    .addComponent(btSearch))
+                    .addComponent(btReset)
+                    .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(spTabelLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -300,51 +347,48 @@ public class LocationView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
-        // TODO add your handling code here:
         if (confirm()) {
             if (isEmpty()) {
                 JOptionPane.showMessageDialog(null, lc.insert(
                         tfId.getText(), tfStreet.getText(),
                         tfPostal.getText(), tfCity.getText(),
-                        TfState.getText(), cbCountry.getSelectedItem().toString()));
-//                        fieldProvince.getText(), fieldCountry.getText()));
+                        tfState.getText(), cbCountry.getSelectedItem().toString().toString().split(" - ")[0]
+                        
+                ));
             } else {
                 try {
                     int reply = JOptionPane.showConfirmDialog(null,
-                            "Confirm your Action ?",
-                            "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE
+                            "Anda Yakin Melakukan Perubaan ?",
+                            "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE
                     );
                     if (reply == JOptionPane.YES_OPTION) {
                         JOptionPane.showMessageDialog(null, lc.update(
                                 tfId.getText(), tfStreet.getText(),
                                 tfPostal.getText(), tfCity.getText(),
-                                TfState.getText(), cbCountry.getSelectedItem().toString()));
-//                            fieldProvince.getText(), fieldCountry.getText()));
+                                tfState.getText(), cbCountry.getSelectedItem().toString().split(" - ")[0]));
+                        tableData(lc.getData());
                         clean();
-                        tableData(lc.getAll());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             clean();
-            tableData(lc.getAll());
+            tableData(lc.getData());
         }
-
         String id = tfId.getText();
         String address = tfStreet.getText();
         String postalCode = tfPostal.getText();
         String city = tfCity.getText();
-        String state = TfState.getText();
+        String state = tfState.getText();
         String countryId = cbCountry.getSelectedItem().toString();
         lc.insert(id, address, postalCode, city, state, countryId);
-
     }//GEN-LAST:event_btSaveActionPerformed
 
     private void btDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDeleteActionPerformed
-        // TODO add your handling code here:
         String id = tfId.getText();
-        if (id.equals("")) {
+        String city = tfCity.getText();
+        if (id.equals("") || city.equals("")) {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong");
         } else {
             try {
@@ -352,68 +396,61 @@ public class LocationView extends javax.swing.JPanel {
                         "Are You Sure ?", "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE
                 );
                 if (reply == JOptionPane.YES_OPTION) {
-                    JOptionPane.showMessageDialog(null, lc.delete(id));
+                    JOptionPane.showMessageDialog(null, lc.delete(id, city));
                     clean();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        tableData(lc.getAll());
-
+        tableData(lc.getData());
     }//GEN-LAST:event_btDeleteActionPerformed
 
     private void tbLocationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbLocationMouseClicked
-        // TODO add your handling code here:
         tfId.setText(tbLocation.getValueAt(tbLocation.getSelectedRow(), 1).toString());
         tfStreet.setText(tbLocation.getValueAt(tbLocation.getSelectedRow(), 2).toString());
         tfPostal.setText(tbLocation.getValueAt(tbLocation.getSelectedRow(), 3).toString());
         tfCity.setText(tbLocation.getValueAt(tbLocation.getSelectedRow(), 4).toString());
-        TfState.setText(String.valueOf(tbLocation.getValueAt(tbLocation.getSelectedRow(), 5)));
-//        fieldCountry.setText(contentTable.getValueAt(contentTable.getSelectedRow(), 6).toString());
-        cbCountry.setSelectedItem(tbLocation.getValueAt(tbLocation.getSelectedRow(), 6).toString());
+        tfState.setText(String.valueOf(tbLocation.getValueAt(tbLocation.getSelectedRow(), 5)));
+        
+        for (int i = 0; i < cbCountry.getItemCount(); i++) {
+            if (cbCountry.getItemAt(i).split(" - ")[0].equals(tbLocation.getValueAt(tbLocation.getSelectedRow(), 6).toString()))
+                cbCountry.setSelectedIndex(i);
+        }
         tfId.setEnabled(false);
+        btDelete.setEnabled(true);
     }//GEN-LAST:event_tbLocationMouseClicked
 
     private void btResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btResetActionPerformed
-        // TODO add your handling code here:
-        clean();
+        tableData(lc.getData());
         tfId.setEnabled(true);
+        btDelete.setEnabled(false);
         clean();
     }//GEN-LAST:event_btResetActionPerformed
 
     private void btSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchActionPerformed
-        // TODO add your handling code here:
-//        String searchString = fieldId.getText();
-//        String keyword = "";
-//        if (searchString != "") {
-//            tableData(lc.getById(""));
-//        } else if (searchString != "") {
-//            keyword = searchString;
-//            tableData(lc.getAll(searchString));
-//        } else if(fieldAddress.getText() != ""){
-//            keyword = fieldAddress.getText();
-//            tableData(lc.getAll(keyword));
-//        } else if(fieldPostal.getText() != ""){
-//            keyword = fieldPostal.getText();
-//            tableData(lc.getAll(keyword));
-//        } else if(fieldCity.getText() != ""){
-//            keyword = fieldCity.getText();
-//            tableData(lc.getAll(keyword));
-//        } else if(fieldProvince.getText() != ""){
-//            keyword = fieldProvince.getText();
-//            tableData(lc.getAll(keyword));
-//        } else {
-//            tableData(lc.getAll(""));
-//        }
-
-        String id = tfId.getText();
-        if (id != "" && cbSearch.getSelectedItem().equals("BY ID")) {
-            tableData((List<Location>) lc.getById(id));
-        } else if (id != "" && cbSearch.getSelectedItem().equals("SEARCH")) {
-            tableData(lc.searchBy(id));
-        } else {
-            tableData(lc.getAll());
+        String key = tfSearch.getText().toString();
+        btDelete.setEnabled(true);
+        tfId.setEnabled(false);
+        if (key != "" && cbSearch.getSelectedItem().equals("BY ID")) {
+            Location n = lc.getById(key);
+            tfId.setText(n.getId().toString());
+            tfStreet.setText(n.getStreetAddress());
+            tfPostal.setText(n.getPostalCode());
+            tfCity.setText(n.getCity());
+            tfState.setText(n.getStateProvince());
+            
+            for (int i = 0; i < cbCountry.getItemCount(); i++) {
+                if (cbCountry.getItemAt(i).split(" - ")[0].equals(n.getCountry().getId()))
+                    cbCountry.setSelectedIndex(i);
+            }
+            
+        } else if (key != "" && cbSearch.getSelectedItem().equals("SEARCH")) {
+            tableData(lc.searchBy(key));
+        } else if (key.equals("") && cbSearch.getSelectedItem().equals("SEARCH")){
+            tableData(lc.getData());
+        }else{
+            JOptionPane.showMessageDialog(null, "Tidak ada data");
         }
     }//GEN-LAST:event_btSearchActionPerformed
 
@@ -421,15 +458,20 @@ public class LocationView extends javax.swing.JPanel {
         // TODO add your handling code here: Nothing
     }//GEN-LAST:event_cbSearchActionPerformed
 
+    private void cbCountryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCountryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbCountryActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField TfState;
     private javax.swing.JButton btDelete;
     private javax.swing.JButton btReset;
     private javax.swing.JButton btSave;
     private javax.swing.JButton btSearch;
     private javax.swing.JComboBox<String> cbCountry;
     private javax.swing.JComboBox<String> cbSearch;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JInternalFrame jfLocation;
     private javax.swing.JLabel lblCity;
     private javax.swing.JLabel lblCountry;
@@ -442,6 +484,8 @@ public class LocationView extends javax.swing.JPanel {
     private javax.swing.JTextField tfCity;
     private javax.swing.JTextField tfId;
     private javax.swing.JTextField tfPostal;
+    private javax.swing.JTextField tfSearch;
+    private javax.swing.JTextField tfState;
     private javax.swing.JTextField tfStreet;
     // End of variables declaration//GEN-END:variables
 }
