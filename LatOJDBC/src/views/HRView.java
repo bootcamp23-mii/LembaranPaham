@@ -35,7 +35,7 @@ public class HRView extends javax.swing.JFrame {
 
     SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-    UserController uc = new UserController((Connection) sessionFactory);
+    UserController uc = new UserController(sessionFactory);
     
 
     /**

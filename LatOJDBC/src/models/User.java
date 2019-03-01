@@ -6,7 +6,6 @@
 package models;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,17 +24,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
-    , @NamedQuery(name = "User.findByIdUsers", query = "SELECT u FROM User u WHERE u.idUsers = :idUsers")
     , @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username")
     , @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
-    @Column(name = "ID_USERS")
-    private BigDecimal idUsers;
     @Column(name = "USERNAME")
     private String username;
     @Column(name = "PASSWORD")
@@ -44,20 +39,13 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(BigDecimal idUsers) {
-        this.idUsers = idUsers;
+    public User(String username) {
+        this.username = username;
     }
 
     public User(String username, String password) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public BigDecimal getIdUsers() {
-        return idUsers;
-    }
-
-    public void setIdUsers(BigDecimal idUsers) {
-        this.idUsers = idUsers;
+        this.username = username;
+        this.password = password;
     }
 
     public String getUsername() {
@@ -79,7 +67,7 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idUsers != null ? idUsers.hashCode() : 0);
+        hash += (username != null ? username.hashCode() : 0);
         return hash;
     }
 
@@ -90,7 +78,7 @@ public class User implements Serializable {
             return false;
         }
         User other = (User) object;
-        if ((this.idUsers == null && other.idUsers != null) || (this.idUsers != null && !this.idUsers.equals(other.idUsers))) {
+        if ((this.username == null && other.username != null) || (this.username != null && !this.username.equals(other.username))) {
             return false;
         }
         return true;
@@ -98,7 +86,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "models.User[ idUsers=" + idUsers + " ]";
+        return "models.User[ username=" + username + " ]";
     }
     
 }

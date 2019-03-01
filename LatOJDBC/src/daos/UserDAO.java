@@ -61,12 +61,11 @@ public class UserDAO {
         transaction = session.beginTransaction();
         try {
             if (isGetData) {
-                users = session.createQuery("FROM Users where USERNAMEUSERNAME = "+keyword).list();
+                users = session.createQuery("FROM User where username = '"+keyword+"'").list();
             }else{
-                users = session.createQuery("SELECT * FROM USERS WHERE USERNAME like '%" + keyword +
-                    "%' or PASSWORD like '%" + keyword + "%'").list();
+                users = session.createQuery("FROM User WHERE username like '%" + keyword +
+                    "%' or Password like '%" + keyword + "%'").list();
             }
-            
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,12 +79,12 @@ public class UserDAO {
         return users;
     }
     
-    public List<User> login(Object keyword) {
+    public List<User> login(Object username) {
         List<User> users = new ArrayList<User>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            users = session.createQuery("SELECT * FROM USERS WHERE USERNAME = "+keyword).list();
+            users = session.createQuery("FROM User WHERE Username = '"+username+"'").list();
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();

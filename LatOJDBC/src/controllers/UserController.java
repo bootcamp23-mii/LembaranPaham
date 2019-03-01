@@ -25,7 +25,7 @@ public class UserController {
     }
     
     public boolean login(String username, String password){
-        List<User> list = udao.login(new User(username, password));
+        List<User> list = udao.login(username);
         if (!list.isEmpty()) 
             for (User user : list) 
                 if (BCrypt.checkpw(password, user.getPassword())) 
@@ -39,9 +39,16 @@ public class UserController {
         return result;
     }
     
+    public List<User> getData(String key) {
+        List result;
+        result = udao.getData("", false);
+        return result;
+    }
+    
     public String register(String username, String password){
         String result = "";
-        if (udao.saveOrDelete(new User(username, password), true)){
+        String passhash = BCrypt.hashpw(password, BCrypt.gensalt());
+        if (udao.saveOrDelete(new User(username, passhash), true)){
             result = "Registrasi Berhasil";            
         }else{
             result = "Maaf registrasi gagal";
