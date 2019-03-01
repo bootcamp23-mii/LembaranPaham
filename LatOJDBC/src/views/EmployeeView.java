@@ -20,7 +20,6 @@ import javax.swing.table.DefaultTableModel;
 import models.Department;
 import models.Employee;
 import org.hibernate.SessionFactory;
-import tools.DBConnection;
 import tools.HibernateUtil;
 
 /**
