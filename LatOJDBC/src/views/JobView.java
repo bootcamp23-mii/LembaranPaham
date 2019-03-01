@@ -391,7 +391,7 @@ public class JobView extends javax.swing.JInternalFrame {
                         "Anda yakin akan menghapus data?", "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE
                 );
                 if (reply == JOptionPane.YES_OPTION) {
-                    JOptionPane.showMessageDialog(null, jc.delete(id));
+                    JOptionPane.showMessageDialog(null, jc.delete(tfId.getText(), tfTitle.getText(), tfMinsal.getText(), tfMaxsal.getText()));
                     clean();
                 }
             } catch (Exception e) {

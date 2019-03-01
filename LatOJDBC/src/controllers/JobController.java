@@ -13,7 +13,7 @@ import org.hibernate.SessionFactory;
 
 /**
  *
- * @author Lusiana
+ * @author acer
  */
 public class JobController {
 
@@ -30,8 +30,8 @@ public class JobController {
          return "Maaf coba lagi";
     }
     
-    public String delete(String id){
-         if (jdao.saveOrDelete(new Job(id), false)) {
+    public String delete(String id, String title, String minSalary, String maxSalary){
+         if (jdao.saveOrDelete(new Job(id,title, Integer.parseInt(minSalary), Integer.parseInt(maxSalary)), false)) {
             return "Selamat berhasil dihapus";
         }
         return "Maaf coba lagi";        
